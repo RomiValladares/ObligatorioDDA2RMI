@@ -1,8 +1,9 @@
 package logica.poker;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class CartaPoker {
+public class CartaPoker implements Serializable {
 
     public enum PaloCarta {
 

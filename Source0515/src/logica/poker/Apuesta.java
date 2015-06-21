@@ -5,6 +5,7 @@
  */
 package logica.poker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import logica.Jugador;
 
@@ -12,7 +13,7 @@ import logica.Jugador;
  *
  * @author Romi
  */
-public class Apuesta {
+public class Apuesta implements Serializable {
 
     private final Jugador apostador;
     private final double monto;
@@ -65,6 +66,5 @@ public class Apuesta {
     public double getMontoApostado() {
         return monto;
     }
-    
-    
+
 }

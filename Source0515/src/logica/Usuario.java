@@ -1,6 +1,7 @@
 package logica;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public abstract class Usuario implements Serializable {
 
@@ -43,4 +44,26 @@ public abstract class Usuario implements Serializable {
         this.oid = oid;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Usuario other = (Usuario) obj;
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return Objects.equals(this.contrasena, other.contrasena);
+    }
+
+    
 }

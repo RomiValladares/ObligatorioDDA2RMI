@@ -20,10 +20,10 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import logica.Jugador;
+import logica.poker.EventoManoPoker;
+import logica.poker.EventoManoPoker.EventosManoPoker;
 import logica.poker.EventoPartidaPoker;
 import logica.poker.EventoPartidaPoker.EventosPartidaPoker;
-import logica.poker.ManoPoker;
-import static logica.poker.ManoPoker.EventosManoPoker.FINALIZO_MANO;
 import logica.poker.PartidaPoker;
 import logica.poker.figuras.FiguraPoker;
 
@@ -407,8 +407,8 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         txtDialog.setText(evento.getDescripcion());
     }
 
-    protected void mostrarPanelDialog(ManoPoker.EventoManoPoker evento, Map.Entry<Jugador, FiguraPoker> ganadorYFigura, final int totalJugadoresApuesta) {
-        if (evento.getEvento().equals(ManoPoker.EventosManoPoker.GANADOR)) {
+    protected void mostrarPanelDialog(EventoManoPoker evento, Map.Entry<Jugador, FiguraPoker> ganadorYFigura, final int totalJugadoresApuesta) {
+        if (evento.getEvento().equals(EventosManoPoker.GANADOR)) {
             mostrarPanelDialog();
 
             if (ganadorYFigura.getValue() != null) {
@@ -426,13 +426,13 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (framePoker.puedeSeguirEnJuego()) {
-                        mostrarPanelDialog(ManoPoker.EventosManoPoker.FINALIZO_MANO, totalJugadoresApuesta != 1);
+                        mostrarPanelDialog(EventosManoPoker.FINALIZO_MANO, totalJugadoresApuesta != 1);
                     } else {
                         mostrarPanelDialog(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE);
                     }
                 }
             });
-        } else if ((evento.getEvento().equals(ManoPoker.EventosManoPoker.GANADOR) || evento.getEvento().equals(ManoPoker.EventosManoPoker.FINALIZO_MANO)) && ganadorYFigura == null) {
+        } else if ((evento.getEvento().equals(EventosManoPoker.GANADOR) || evento.getEvento().equals(EventosManoPoker.FINALIZO_MANO)) && ganadorYFigura == null) {
             mostrarPanelDialog();
             panelEsperando.setVisible(false);
             txtDialog.setText("Finalizo la mano sin ganador. Se acumula el pozo.");
@@ -440,7 +440,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (framePoker.puedeSeguirEnJuego()) {
-                        mostrarPanelDialog(ManoPoker.EventosManoPoker.FINALIZO_MANO, false);
+                        mostrarPanelDialog(EventosManoPoker.FINALIZO_MANO, false);
                     } else {
                         mostrarPanelDialog(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE);
                     }
@@ -449,12 +449,12 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         }
     }
 
-    private void mostrarPanelDialog(ManoPoker.EventosManoPoker evento) {
+    private void mostrarPanelDialog(EventosManoPoker evento) {
         mostrarPanelDialog(evento, true);
     }
 
-    private void mostrarPanelDialog(ManoPoker.EventosManoPoker evento, boolean mostrarPanelEsperando) {
-        if (evento.equals(FINALIZO_MANO)) {
+    private void mostrarPanelDialog(EventosManoPoker evento, boolean mostrarPanelEsperando) {
+        if (evento.equals(EventosManoPoker.FINALIZO_MANO)) {
             mostrarPanelDialog();
             panelEsperando.setVisible(mostrarPanelEsperando);
             btnNoDialog.setVisible(true);

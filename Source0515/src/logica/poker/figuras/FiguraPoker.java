@@ -5,6 +5,7 @@
  */
 package logica.poker.figuras;
 
+import java.io.Serializable;
 import java.util.List;
 import logica.poker.CartaPoker;
 
@@ -12,7 +13,7 @@ import logica.poker.CartaPoker;
  *
  * @author Romi
  */
-public interface FiguraPoker {
+public interface FiguraPoker extends Serializable {
 
     /*
      * @return true si la lista cumple con esta figura

@@ -32,13 +32,10 @@ public class ControladorFramePoker extends ControladorFrameJuegos {
     private boolean estaEnLaPartida = true;
     private PartidaPoker partida;
 
-    public ControladorFramePoker(Jugador jugador) throws RemoteException {
-        super(jugador);
-    }
-
     ControladorFramePoker(PartidaPoker partidaPoker, Jugador jugador) throws RemoteException {
-        this(jugador);
+        super(jugador);
         this.partida = partidaPoker;
+        this.partida.agregar(this);
     }
 
     boolean partidaComenzada() {

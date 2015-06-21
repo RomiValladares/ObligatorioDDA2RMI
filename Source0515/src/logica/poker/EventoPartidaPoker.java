@@ -5,13 +5,14 @@
  */
 package logica.poker;
 
+import java.io.Serializable;
 import logica.Jugador;
 
 /**
  *
  * @author Romi
  */
-public class EventoPartidaPoker {
+public class EventoPartidaPoker implements Serializable {
 
     public enum EventosPartidaPoker {
 

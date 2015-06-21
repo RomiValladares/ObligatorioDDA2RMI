@@ -38,6 +38,7 @@ public class PanelDatosJugador extends javax.swing.JPanel {
 
     public void setControlador(ControladorFrameJuegos controlador) {
         this.controlador = controlador;
+        //this.controlador.addObserver(this);
         actualizar();
     }
 

@@ -11,6 +11,8 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import logica.poker.EventoManoPoker;
+import logica.poker.EventoManoPoker.EventosManoPoker;
 import logica.poker.ManoPoker;
 import logica.poker.PartidaPoker;
 
@@ -38,7 +40,11 @@ public class PanelDatosPartida extends javax.swing.JPanel implements Observer {
     public void actualizarUI() {
         fillListaJugadores();
         if (controlador.getManoActual() != null) {
-            lblPozoActual.setText("$" + controlador.getManoActual().getPozo());
+            try {
+                lblPozoActual.setText("$" + controlador.getManoActual().getPozo());
+            } catch (RemoteException ex) {
+                Logger.getLogger(PanelDatosPartida.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         lblNumeroPartida.setText(controlador.getNumeroPartida() + "");
     }
@@ -182,13 +188,9 @@ public class PanelDatosPartida extends javax.swing.JPanel implements Observer {
         actualizarUI();
     }
 
-    public void addEvento(ManoPoker.EventoManoPoker eventosManoPoker, PartidaPoker partida) {
-        if (eventosManoPoker.getEvento() == ManoPoker.EventosManoPoker.NUEVA_APUESTA) {
-            try {
-                modelListEventosMano.addElement(partida.getManoActual().getApuesta().toString());
-            } catch (RemoteException ex) {
-                Logger.getLogger(PanelDatosPartida.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    public void addEvento(EventoManoPoker eventosManoPoker) {
+        if (eventosManoPoker.getEvento() == EventosManoPoker.NUEVA_APUESTA) {
+            modelListEventosMano.addElement(controlador.getApuesta());
         } else {
             modelListEventosMano.addElement(eventosManoPoker.getDescripcion());
         }

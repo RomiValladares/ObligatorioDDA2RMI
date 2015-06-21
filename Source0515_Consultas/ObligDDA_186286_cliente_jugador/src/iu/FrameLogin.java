@@ -56,6 +56,12 @@ public class FrameLogin extends javax.swing.JDialog {
 
         jLabel1.setText("Usuario:");
 
+        inputUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                inputUsuarioKeyReleased(evt);
+            }
+        });
+
         jLabel2.setText("Contraseña:");
 
         btnIniciarSesion.setText("Iniciar Sesion");
@@ -117,6 +123,11 @@ public class FrameLogin extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
+
+    private void inputUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputUsuarioKeyReleased
+        // TODO add your handling code here:
+        inputContrasena.setText(inputUsuario.getText());
+    }//GEN-LAST:event_inputUsuarioKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

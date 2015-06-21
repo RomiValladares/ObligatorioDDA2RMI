@@ -11,7 +11,7 @@ import observableremoto.ObservableRemotoV1;
 //Observable: lo observa la interfaz de usuario
 //Observer: observa los subsistemas
 //public class FachadaV1 extends Observable implements Observer, Fachada {
-public class FachadaV1 extends ObservableRemotoV1 implements Fachada {
+public class FachadaV1 extends ObservableRemotoV1 implements Fachada, Observer {
 
     private static FachadaV1 instancia;
     private final SsUsuarios ssUsuarios;
@@ -21,6 +21,7 @@ public class FachadaV1 extends ObservableRemotoV1 implements Fachada {
     private FachadaV1() throws RemoteException {
         ssUsuarios = SsUsuarios.getInstancia();
         ssJuegos = SsJuegos.getInstancia();
+        ssJuegos.addObserver(this);
         //ssJuegos.addObserver(this);
     }
 
@@ -68,5 +69,10 @@ public class FachadaV1 extends ObservableRemotoV1 implements Fachada {
         return ssJuegos.getDatosPartidas(codigoJuego);
     }
     // </editor-fold> 
+
+    @Override
+    public void update(Observable o, Object arg) {
+        notificar(arg);
+    }
 
 }

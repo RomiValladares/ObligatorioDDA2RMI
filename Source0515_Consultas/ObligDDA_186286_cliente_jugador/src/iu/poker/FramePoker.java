@@ -16,11 +16,10 @@ import javax.swing.JOptionPane;
 import logica.Jugador;
 import logica.PartidaJuegoCasino;
 import logica.poker.CartaPoker;
+import logica.poker.EventoManoPoker;
+import logica.poker.EventoManoPoker.EventosManoPoker;
 import logica.poker.EventoPartidaPoker;
 import logica.poker.EventoPartidaPoker.EventosPartidaPoker;
-import logica.poker.ManoPoker.EventoManoPoker;
-import logica.poker.ManoPoker.EventosManoPoker;
-import static logica.poker.ManoPoker.EventosManoPoker.FINALIZO_MANO;
 import logica.poker.PartidaPoker;
 
 /**
@@ -217,24 +216,25 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 // </editor-fold> 
 
     @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("FramePoker.update" + o.getClass());
-        if (o.getClass().equals(PartidaPoker.class)) {
-            panelDatosJugador1.actualizar();
-            if (arg instanceof EventoManoPoker) {
-                EventoManoPoker evento = (EventoManoPoker) arg;
-                actualizar(evento);
-            } else if (arg instanceof EventoPartidaPoker) {
-                EventoPartidaPoker evento = (EventoPartidaPoker) arg;
-                actualizar(evento);
-            } else if (arg instanceof EventosPartidaPoker) {
-                EventosPartidaPoker evento = (EventosPartidaPoker) arg;
-                actualizar(evento);
-            } else if (arg == null) {
-                Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update " + (arg != null ? arg.getClass() : "") + arg);
-                actualizarUI();
-            }
+    public synchronized void update(Observable o, Object arg) {
+        System.out.println("FramePoker.update " + (o != null ? o.getClass() : null) + ", " + (arg != null ? arg.getClass() : null));
+        //TODO revisar que comentar esto no cree bugs
+        //if (o.getClass().equals(PartidaPoker.class)) {
+        panelDatosJugador1.actualizar();
+        if (arg instanceof EventoManoPoker) {
+            EventoManoPoker evento = (EventoManoPoker) arg;
+            actualizar(evento);
+        } else if (arg instanceof EventoPartidaPoker) {
+            EventoPartidaPoker evento = (EventoPartidaPoker) arg;
+            actualizar(evento);
+        } else if (arg instanceof EventosPartidaPoker) {
+            EventosPartidaPoker evento = (EventosPartidaPoker) arg;
+            actualizar(evento);
+        } else if (arg == null) {
+            Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update " + (arg != null ? arg.getClass() : "") + arg);
+            actualizarUI();
         }
+        // }
     }
 
     private void actualizar(EventosPartidaPoker evento) {
@@ -249,14 +249,14 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     private void actualizar(EventoManoPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoManoPoker " + evento);
-        panelDatosPartida1.addEvento(evento, controlador.getPartida());
+        panelDatosPartida1.addEvento(evento);
         //TODO revisar cuando se termina la partida y eso
         if (evento.getEvento() != EventosManoPoker.GANADOR) {
             setAccionJugador(evento.getEvento());
         } else {
-            panelAccionesJugador.mostrarPanelDialog(evento, controlador.getManoActual().getGanadorYFigura(), controlador.getTotalJugadoresApuesta());
+            panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), controlador.getTotalJugadoresApuesta());
         }
-        if (evento.getEvento() == FINALIZO_MANO) {
+        if (evento.getEvento() == EventosManoPoker.FINALIZO_MANO) {
             if (controlador.getGanadorManoActual() == null) {//partida.getManoActual().getGanadorYFigura()
                 //todos pasaron y no hubo ganador
                 panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), 0);

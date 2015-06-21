@@ -21,7 +21,7 @@ import logica.poker.EventoPartidaPoker.EventosPartidaPoker;
  */
 public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, PartidaPoker {
 
-    private ManoPoker manoActual;
+    private ManoPokerV1 manoActual;
     private int cantidadMaxJugadores = 4;
     private double apuestaBase = 50;
 
@@ -86,23 +86,24 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     @Override
     public void update(Observable o, Object arg) {
-        if (o.getClass().equals(ManoPoker.class)) {
-            if (manoActual.isFinalizada()) {
-                setTotalApostado(getTotalApostado() + manoActual.getMontoApostado());
-                if (manoActual.getGanadorYFigura() != null) {
-                    //actualiza el saldo del jugador
-                    getJugadores().put(manoActual.getGanadorYFigura().getKey(), manoActual.getPozo());
-                }
-                checkJugadoresSaldoInsuficiente();
+        //TODO verificar que comentar esto no cree bugs
+        //if (o.getClass().equals(ManoPoker.class)) {
+        if (manoActual.isFinalizada()) {
+            setTotalApostado(getTotalApostado() + manoActual.getMontoApostado());
+            if (manoActual.getGanadorYFigura() != null) {
+                //actualiza el saldo del jugador
+                getJugadores().put(manoActual.getGanadorYFigura().getKey(), manoActual.getPozo());
             }
-            //si despues de chequear el saldo de los jugadores todavia no termino la partida
-            //deja que la mano actual notifique
-            if (!isFinalizada()) {
-                notificar(arg);
-            }
-
-            modificar();
+            checkJugadoresSaldoInsuficiente();
         }
+            //si despues de chequear el saldo de los jugadores todavia no termino la partida
+        //deja que la mano actual notifique
+        if (!isFinalizada()) {
+            notificar(arg);
+        }
+
+        modificar();
+        //}
     }
 
     @Override
@@ -183,9 +184,13 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     }
 
     private void nuevaMano(double pozoAcumulado) {
-        manoActual = new ManoPoker(new ArrayList<>(getJugadores().keySet()), apuestaBase, pozoAcumulado);
-        manoActual.addObserver(this);
-        manoActual.comenzar();
+        try {
+            manoActual = new ManoPokerV1(new ArrayList<>(getJugadores().keySet()), apuestaBase, pozoAcumulado);
+            manoActual.addObserver(this);
+            manoActual.comenzar();
+        } catch (RemoteException ex) {
+            Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void checkJugadoresSaldoInsuficiente() {

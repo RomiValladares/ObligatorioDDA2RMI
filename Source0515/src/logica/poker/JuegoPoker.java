@@ -7,8 +7,7 @@ import logica.FabricadorJuegosCasino.CodigosJuego;
 import logica.JuegoCasinoV1;
 import logica.Jugador;
 import logica.PartidaJuegoCasino;
-import logica.PartidaJuegoCasinoV1;
-import logica.poker.ManoPoker.EventoManoPoker;
+import logica.poker.EventoManoPoker.EventosManoPoker;
 import observableremoto.ObservableRemoto;
 import observableremoto.ObservadorRemoto;
 
@@ -126,9 +125,9 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
                 actualizarGanancias();
                 notificar(evento);
             }
-        } else if (args instanceof ManoPoker.EventoManoPoker) {
+        } else if (args instanceof EventoManoPoker) {
             EventoManoPoker evento = (EventoManoPoker) args;
-            if (evento.getEvento() != null && (evento.getEvento().equals(ManoPoker.EventosManoPoker.COMENZO_MANO) && getPartidas().contains(getProximaPartida()))) {
+            if (evento.getEvento() != null && (evento.getEvento().equals(EventosManoPoker.COMENZO_MANO) && getPartidas().contains(getProximaPartida()))) {
                 crearPartida();
             }
         } else {
