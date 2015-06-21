@@ -10,8 +10,9 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
-import logica.ssusuarios.Jugador;
+import logica.ssusuarios.JugadorV1;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
+import logica.ssusuarios.Jugador;
 
 /**
  *

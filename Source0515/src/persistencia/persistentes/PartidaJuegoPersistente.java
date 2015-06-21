@@ -6,6 +6,7 @@
 package persistencia.persistentes;
 
 import Persistencia.Persistente;
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import logica.ssjuegos.DatosPartidaJuegoCasino;
 import logica.ssusuarios.Jugador;
+import logica.ssusuarios.JugadorV1;
 
 /**
  *
@@ -72,11 +74,15 @@ public class PartidaJuegoPersistente implements Persistente {
             Jugador j = entry.getKey();
             Double ganancias = entry.getValue();
 
-            r.add("UPDATE Participantes "
-                    + "SET ganador=" + j.equals(u.getGanador()) + ", "
-                    + "ganancias=" + ganancias
-                    + " WHERE nombre='" + j.getNombre() + "' "
-                    + "AND numero_partida=" + u.getNumeroPartida());
+            try {
+                r.add("UPDATE Participantes "
+                        + "SET ganador=" + j.equals(u.getGanador()) + ", "
+                        + "ganancias=" + ganancias
+                        + " WHERE nombre='" + j.getNombre() + "' "
+                        + "AND numero_partida=" + u.getNumeroPartida());
+            } catch (RemoteException ex) {
+                Logger.getLogger(PartidaJuegoPersistente.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return r;
@@ -114,7 +120,7 @@ public class PartidaJuegoPersistente implements Persistente {
         u.setDuracion(rs.getLong("duracion"));
         u.setTotalApostado(rs.getDouble("total_apostado"));
         try {
-            Jugador j = new Jugador();
+            JugadorV1 j = new JugadorV1();
             j.setNombre(rs.getString("nombre"));
             u.agregarJugador(j, rs.getDouble("ganancias"));
             if (rs.getBoolean("ganador")) {
@@ -122,7 +128,9 @@ public class PartidaJuegoPersistente implements Persistente {
             }
 
             u.setComienzo((Date) formato.parse(rs.getString("comienzo")));
-            u.setFinal((Date) formato.parse(rs.getString("final")));
+            if (rs.getString("final") != null) {
+                u.setFinal((Date) formato.parse(rs.getString("final")));
+            }
         } catch (Exception ex) {
             Logger.getLogger(PartidaJuegoPersistente.class.getName()).log(Level.SEVERE, null, ex);
         }

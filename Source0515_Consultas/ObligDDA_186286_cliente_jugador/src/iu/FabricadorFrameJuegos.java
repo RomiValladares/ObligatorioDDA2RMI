@@ -3,8 +3,8 @@ package iu;
 import iu.poker.FramePoker;
 import javax.swing.JFrame;
 import logica.ssjuegos.JuegoCasino;
-import logica.ssusuarios.Jugador;
 import logica.ssjuegos.PartidaJuegoCasino;
+import logica.ssusuarios.Jugador;
 
 public class FabricadorFrameJuegos {
 

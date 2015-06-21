@@ -34,7 +34,11 @@ public class PanelFinPartida extends javax.swing.JPanel {
         } catch (RemoteException ex) {
             Logger.getLogger(PanelFinPartida.class.getName()).log(Level.SEVERE, null, ex);
         }
-        lblGanador.setText("Ganador " + ganador);
+        try {
+            lblGanador.setText("Ganador " + ganador.getNombre());
+        } catch (RemoteException ex) {
+            Logger.getLogger(PanelFinPartida.class.getName()).log(Level.SEVERE, null, ex);
+        }
         btnCerrarDialog.addActionListener(new ActionListener() {
 
             @Override

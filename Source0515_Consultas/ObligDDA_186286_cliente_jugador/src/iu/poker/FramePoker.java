@@ -311,7 +311,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                     actualizarCartas();
                     break;
                 case NUEVA_APUESTA:
-                    panelAccionesJugador.setTextNuevaApuesta(controlador.getApuesta() + ". Entrar en la apuesta?");
+                    panelAccionesJugador.setTextNuevaApuesta(controlador.getApuesta().getEtiqueta() + ". Entrar en la apuesta?");
                     if (controlador.jugadorAposto()) {
                         setModoDescartarse(true);
                     } else {

@@ -7,9 +7,8 @@ package logica.ssjuegos.poker;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import logica.ssusuarios.Jugador;
 import logica.ssjuegos.PartidaJuegoCasino;
-import observableremoto.ObservableRemoto;
+import logica.ssusuarios.Jugador;
 
 /**
  *

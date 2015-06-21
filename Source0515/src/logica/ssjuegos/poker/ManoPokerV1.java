@@ -13,11 +13,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Observable;
 import java.util.Observer;
-import logica.ssusuarios.Jugador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
+import logica.ssusuarios.Jugador;
 import observableremoto.ObservableLocal;
 
 /**
@@ -175,8 +176,15 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     public double getApuestaMaxima() {
         double saldoMinimo = Double.MAX_VALUE;
         for (Jugador j : jugadores) {
-            if (j.getSaldo() < saldoMinimo) {
-                saldoMinimo = j.getSaldo();
+            /**
+             * TODO este try catch is re what spanglish
+             */
+            try {
+                if (j.getSaldo() < saldoMinimo) {
+                    saldoMinimo = j.getSaldo();
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return saldoMinimo;
@@ -253,11 +261,15 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     }
 
     protected void acreditarPozoGanador(Jugador j) {
-        j.agregarSaldo(pozo);
-        /**
-         * TODO verificar que comentar esto no cree bugs
-         */
+        try {
+            j.agregarSaldo(pozo);
+            /**
+             * TODO verificar que comentar esto no cree bugs
+             */
 //notificar();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

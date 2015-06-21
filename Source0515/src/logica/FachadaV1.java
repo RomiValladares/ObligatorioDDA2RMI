@@ -4,13 +4,13 @@ import logica.ssjuegos.SsJuegos;
 import logica.ssjuegos.JuegoCasino;
 import logica.ssjuegos.DatosPartidaJuegoCasino;
 import logica.ssusuarios.SsUsuarios;
-import logica.ssusuarios.Usuario;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logica.ssusuarios.Usuario;
 import observableremoto.ObservableRemotoV1;
 
 //Observable: lo observa la interfaz de usuario

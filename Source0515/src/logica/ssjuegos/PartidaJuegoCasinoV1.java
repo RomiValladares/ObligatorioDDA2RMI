@@ -5,12 +5,12 @@
  */
 package logica.ssjuegos;
 
-import logica.ssusuarios.Jugador;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Observable;
+import logica.ssusuarios.Jugador;
 import observableremoto.ObservableRemotoV1;
 
 /**
@@ -173,7 +173,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
 
     @Override
     public ArrayList<Jugador> getJugadoresPartida() {
-        return new ArrayList<>(datos.getJugadores().keySet());
+        return new ArrayList<Jugador>(datos.getJugadores().keySet());
     }
 
 }

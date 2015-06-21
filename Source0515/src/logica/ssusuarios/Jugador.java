@@ -1,36 +1,25 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package logica.ssusuarios;
 
-public class Jugador extends Usuario {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-    public Jugador(String nombre) {
-        super(nombre);
-    }
+/**
+ *
+ * @author Romi
+ */
+public interface Jugador extends Usuario {
 
-    private double saldo;
+    double getSaldo() throws RemoteException;
 
-    public Jugador() {
+    public String getNombre() throws RemoteException;;
 
-    }
+    public void agregarSaldo(double pozo) throws RemoteException;
 
-    public double getSaldo() {
-        return saldo;
-    }
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-    public void restarSaldo(double apuestaBase) {
-        setSaldo(getSaldo() - apuestaBase);
-    }
-
-    @Override
-    public String toString() {
-        return "Jugador " + getNombre();
-    }
-
-    public void agregarSaldo(double pozo) {
-        this.saldo += pozo;
-    }
+    public void restarSaldo(double monto) throws RemoteException;
 
 }

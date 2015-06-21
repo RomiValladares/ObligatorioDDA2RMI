@@ -19,6 +19,7 @@ import logica.ssjuegos.poker.CartaPoker;
 import logica.ssjuegos.poker.ManoPoker;
 import logica.ssjuegos.poker.PartidaPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
+import logica.ssusuarios.DatosUsuario;
 import observableremoto.ControladorObservador;
 
 /**
@@ -33,9 +34,10 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
     private boolean estaEnLaPartida = true;
     private PartidaPoker partida;
     private Jugador jugador;
+    private DatosUsuario datos;
 
     ControladorFramePoker(PartidaPoker partidaPoker, Jugador jugador) throws RemoteException {
-        this.jugador = jugador;
+        setJugador(jugador);
         this.partida = partidaPoker;
         this.partida.agregar(this);
     }
@@ -260,6 +262,36 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
     @Override
     public Jugador getJugador() {
         return jugador;
+    }
+
+    @Override
+    public DatosUsuario getDatosJugador() {
+        return datos;
+    }
+
+    private void setJugador(Jugador jugador) {
+        this.jugador = jugador;
+
+        /**
+         * pide los datos solo una vez porque son serializables y no deberian
+         * cambiar
+         */
+        try {
+            this.datos = jugador.getDatos();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ControladorFrameJuegos.class.getName()).log(Level.SEVERE, null, ex);
+            this.datos = null;
+        }
+    }
+
+    @Override
+    public double getSaldoJugador() {
+        try {
+            return jugador.getSaldo();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        }
     }
 
 }

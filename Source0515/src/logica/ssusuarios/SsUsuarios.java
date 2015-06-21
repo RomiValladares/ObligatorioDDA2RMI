@@ -7,8 +7,8 @@ public class SsUsuarios {
     private ServiciosUsuario servicios;
 
     private static SsUsuarios instancia;
-    private HashMap<String, Usuario> usuariosRegistrados = new HashMap<>();
-    private HashMap<String, Usuario> usuariosLogueados = new HashMap<>();
+    private HashMap<String, UsuarioV1> usuariosRegistrados = new HashMap<>();
+    private HashMap<String, UsuarioV1> usuariosLogueados = new HashMap<>();
 
     private SsUsuarios() {
         servicios = new ServiciosUsuarioV1();
@@ -24,7 +24,7 @@ public class SsUsuarios {
 
     public Usuario ingresar(String nombreUsuario, String contrasena)
             throws Exception {
-        Usuario jugadorRegistrado = usuariosRegistrados.get(nombreUsuario);
+        UsuarioV1 jugadorRegistrado = usuariosRegistrados.get(nombreUsuario);
         if (jugadorRegistrado == null
                 || !jugadorRegistrado.getContrasena().equals(contrasena)) {
             // TODO hardcoded

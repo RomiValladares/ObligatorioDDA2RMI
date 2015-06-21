@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -411,14 +412,20 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         if (evento.getEvento().equals(EventosManoPoker.GANADOR)) {
             mostrarPanelDialog();
 
+            String ganador = null;
+            try {
+                ganador = "Jugador " + ganadorYFigura.getKey().getNombre();
+            } catch (RemoteException ex) {
+                Logger.getLogger(PanelAccionesJugador.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (ganadorYFigura.getValue() != null) {
-                txtDialog.setText(ganadorYFigura.getKey()
+                txtDialog.setText(ganador
                         + " gana con figura " + ganadorYFigura.getValue());
             } else if (totalJugadoresApuesta == 1) {
-                txtDialog.setText(ganadorYFigura.getKey()
+                txtDialog.setText(ganador
                         + " gana como unico apostador.");
             } else {
-                txtDialog.setText(ganadorYFigura.getKey()
+                txtDialog.setText(ganador
                         + " gana sin figura, por carta mas alta.");
             }
 

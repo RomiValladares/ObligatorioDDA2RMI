@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import logica.ssusuarios.Jugador;
+import logica.ssusuarios.JugadorV1;
 import logica.ssjuegos.poker.CartaPoker;
 import logica.ssjuegos.poker.MazoPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
@@ -18,20 +18,20 @@ import logica.ssjuegos.poker.figuras.FiguraPoker;
 public class TestManoPoker {
 
     private final MazoPoker mazo = new MazoPoker();
-    private HashMap<Jugador, List<CartaPoker>> cartasJugadores = new HashMap<>();
+    private HashMap<JugadorV1, List<CartaPoker>> cartasJugadores = new HashMap<>();
 
-    protected void agregarJugadorConCartas(Jugador j, List<CartaPoker> cartas) {
+    protected void agregarJugadorConCartas(JugadorV1 j, List<CartaPoker> cartas) {
         cartasJugadores.put(j, cartas);
     }
 
-    protected SimpleEntry<Jugador, FiguraPoker> obtenerGanador() {
+    protected SimpleEntry<JugadorV1, FiguraPoker> obtenerGanador() {
         List<JugadorYFigura> jugadoresYfiguras = new ArrayList<>();
 
         Logger.getLogger(getClass().getName()).log(Level.INFO, null,
                 "obtenerGanador");
-        for (Entry<Jugador, List<CartaPoker>> entrySet : cartasJugadores
+        for (Entry<JugadorV1, List<CartaPoker>> entrySet : cartasJugadores
                 .entrySet()) {
-            Jugador jugador = entrySet.getKey();
+            JugadorV1 jugador = entrySet.getKey();
             Logger.getLogger(getClass().getName()).log(Level.INFO, null,
                     "jugador=" + jugador);
             List<CartaPoker> cartas = entrySet.getValue();
@@ -55,11 +55,11 @@ public class TestManoPoker {
     // si hay empate entre las figuras ordena por carta en la mano del jugador
     public static class JugadorYFigura implements Comparable {
 
-        private Jugador jugador;
+        private JugadorV1 jugador;
         private FiguraPoker figura;
         private final List<CartaPoker> cartas;
 
-        public JugadorYFigura(Jugador jugador, FiguraPoker figura,
+        public JugadorYFigura(JugadorV1 jugador, FiguraPoker figura,
                 List<CartaPoker> cartas) {
             this.jugador = jugador;
             this.figura = figura;
@@ -68,7 +68,7 @@ public class TestManoPoker {
                     new CartaPoker.ComparadorPorNumeroCartaDesc());
         }
 
-        public Jugador getJugador() {
+        public JugadorV1 getJugador() {
             return jugador;
         }
 

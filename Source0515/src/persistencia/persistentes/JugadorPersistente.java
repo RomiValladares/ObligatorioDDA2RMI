@@ -6,10 +6,13 @@
 package Persistencia.persistentes;
 
 import Persistencia.Persistente;
+import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import logica.ssusuarios.Jugador;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import logica.ssusuarios.JugadorV1;
 
 /**
  *
@@ -17,9 +20,9 @@ import logica.ssusuarios.Jugador;
  */
 public class JugadorPersistente implements Persistente {
 
-    private Jugador u;
+    private JugadorV1 u;
 
-    public JugadorPersistente(Jugador u) {
+    public JugadorPersistente(JugadorV1 u) {
         this.u = u;
     }
 
@@ -80,7 +83,12 @@ public class JugadorPersistente implements Persistente {
 
     @Override
     public Persistente crearNuevo() {
-        return new JugadorPersistente(new Jugador());
+        try {
+            return new JugadorPersistente(new JugadorV1());
+        } catch (RemoteException ex) {
+            Logger.getLogger(JugadorPersistente.class.getName()).log(Level.SEVERE, null, ex);
+            return new JugadorPersistente(null);
+        }
     }
 
     @Override

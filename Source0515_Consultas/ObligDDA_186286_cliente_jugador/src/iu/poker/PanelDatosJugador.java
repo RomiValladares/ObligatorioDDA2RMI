@@ -43,8 +43,8 @@ public class PanelDatosJugador extends javax.swing.JPanel {
     }
 
     public void actualizar() {
-        lblNombreJugador.setText(controlador.getJugador().getNombre());
-        lblSaldoJugador.setText("" + controlador.getJugador().getSaldo());
+        lblNombreJugador.setText(controlador.getDatosJugador().getNombre());
+        lblSaldoJugador.setText("" + controlador.getSaldoJugador());
     }
 
     /**

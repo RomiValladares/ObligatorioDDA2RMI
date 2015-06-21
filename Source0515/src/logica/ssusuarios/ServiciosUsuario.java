@@ -14,5 +14,5 @@ import java.util.HashMap;
  */
 public interface ServiciosUsuario {
 
-    public HashMap<String, Usuario> getUsuarios();
+    public HashMap<String, UsuarioV1> getUsuarios();
 }

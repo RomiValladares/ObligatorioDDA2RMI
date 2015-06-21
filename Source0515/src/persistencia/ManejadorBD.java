@@ -2,6 +2,8 @@ package Persistencia;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ManejadorBD {
 
@@ -41,8 +43,9 @@ public class ManejadorBD {
             Statement st = conexion.createStatement();
             st.executeUpdate(sql);
             st.close();
-        } catch (SQLException e) {
-            System.out.println("Error al ejecutar sql:\n" + sql + "\n" + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error al ejecutar sql:\n" + sql);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -51,8 +54,9 @@ public class ManejadorBD {
         try {
             Statement st = conexion.createStatement();
             rs = st.executeQuery(sql);
-        } catch (SQLException e) {
-            System.out.println("Error al ejecutar sql:\n" + sql + "\n" + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error al ejecutar sql:\n" + sql);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
     }
@@ -68,8 +72,9 @@ public class ManejadorBD {
             rs.close();
             oid++;
             this.ejecutar("UPDATE Parametros set valor=" + oid + " WHERE nombre='oid'");
-        } catch (SQLException e) {
-            System.out.println("Error al obtener el proximo oid." + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error al obtener el proximo oid." + ex.getMessage());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return oid;
     }
@@ -110,8 +115,9 @@ public class ManejadorBD {
                 p.leer(rs);
             }
             rs.close();
-        } catch (SQLException e) {
-            System.out.println("Error al obtener usuario.\n" + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error al leer persistente.\n" + ex.getMessage());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -160,14 +166,15 @@ public class ManejadorBD {
                     nuevo = p.crearNuevo();
                     nuevo.limpiar();
                     nuevo.setOid(rs.getInt("oid"));
-                    
+
                     ret.add(nuevo.getObjeto());
                 }
                 nuevo.leer(rs);
             }
             rs.close();
-        } catch (SQLException e) {
-            System.out.println("Error al obtener usuarios.\n" + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error al obtener todos.\n" + ex.getMessage());
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return ret;
     }

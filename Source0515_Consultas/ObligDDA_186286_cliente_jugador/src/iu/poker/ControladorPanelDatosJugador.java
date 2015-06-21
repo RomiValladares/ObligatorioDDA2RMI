@@ -5,6 +5,7 @@
  */
 package iu.poker;
 
+import logica.ssusuarios.DatosUsuario;
 import logica.ssusuarios.Jugador;
 
 /**
@@ -14,4 +15,8 @@ import logica.ssusuarios.Jugador;
 public interface ControladorPanelDatosJugador {
 
     public Jugador getJugador();
+
+    public DatosUsuario getDatosJugador();
+
+    public double getSaldoJugador();
 }

@@ -6,7 +6,10 @@
 package logica.ssjuegos.poker;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import logica.ssusuarios.Jugador;
 
 /**
@@ -25,7 +28,11 @@ public class Apuesta implements Serializable {
         this.apostador = apostador;
         this.monto = montoApostado;
         this.jugadores = new ArrayList<>();
-        this.apostador.restarSaldo(monto);
+        try {
+            this.apostador.restarSaldo(monto);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Apuesta.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public boolean agregar(Jugador jugador) throws Exception {
@@ -44,7 +51,16 @@ public class Apuesta implements Serializable {
 
     @Override
     public String toString() {
-        return apostador + " aposto $" + monto;
+        return getEtiqueta();
+    }
+
+    public String getEtiqueta() {
+        try {
+            return apostador.getNombre() + " aposto $" + monto;
+        } catch (RemoteException ex) {
+            Logger.getLogger(Apuesta.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
     }
 
     public Jugador getJugador() {

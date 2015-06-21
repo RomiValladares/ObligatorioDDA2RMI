@@ -5,9 +5,9 @@
  */
 package logica.ssjuegos;
 
-import logica.ssusuarios.Jugador;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import logica.ssusuarios.Jugador;
 import observableremoto.ObservableRemoto;
 
 /**

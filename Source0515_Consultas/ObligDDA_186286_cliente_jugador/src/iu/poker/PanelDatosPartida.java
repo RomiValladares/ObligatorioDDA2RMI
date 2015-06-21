@@ -5,6 +5,7 @@
  */
 package iu.poker;
 
+import iu.RendererCelda;
 import java.rmi.RemoteException;
 import java.util.Observable;
 import java.util.Observer;
@@ -34,7 +35,7 @@ public class PanelDatosPartida extends javax.swing.JPanel implements Observer {
         setControlador(controlador);
     }
 
-//    public void setPartida(PartidaPokerV1 partida) {
+//    public void setPartida(PartidaPoker partida) {
 //        actualizarUI();
 //    }
     public void actualizarUI() {
@@ -51,6 +52,7 @@ public class PanelDatosPartida extends javax.swing.JPanel implements Observer {
 
     private void fillListaJugadores() {
         listJugadores.setListData(controlador.getJugadoresPartida().toArray());
+        listJugadores.setCellRenderer(new RendererCelda());
     }
 
     /**
