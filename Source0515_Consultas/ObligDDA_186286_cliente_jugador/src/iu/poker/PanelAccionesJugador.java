@@ -19,13 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import logica.Jugador;
-import logica.poker.EventoManoPoker;
-import logica.poker.EventoManoPoker.EventosManoPoker;
-import logica.poker.EventoPartidaPoker;
-import logica.poker.EventoPartidaPoker.EventosPartidaPoker;
-import logica.poker.PartidaPoker;
-import logica.poker.figuras.FiguraPoker;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.poker.EventoManoPoker;
+import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
+import logica.ssjuegos.poker.EventoPartidaPoker;
+import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
+import logica.ssjuegos.poker.PartidaPoker;
+import logica.ssjuegos.poker.figuras.FiguraPoker;
 
 /**
  *

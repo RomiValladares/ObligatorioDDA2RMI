@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import logica.JuegoCasino;
-import logica.Jugador;
+import logica.ssjuegos.JuegoCasino;
+import logica.ssusuarios.Jugador;
 
 public abstract class FrameJuegoCasino extends JFrame {
 

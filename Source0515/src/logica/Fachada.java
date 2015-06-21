@@ -5,6 +5,9 @@
  */
 package logica;
 
+import logica.ssjuegos.JuegoCasino;
+import logica.ssjuegos.DatosPartidaJuegoCasino;
+import logica.ssusuarios.Usuario;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import observableremoto.ObservableRemoto;

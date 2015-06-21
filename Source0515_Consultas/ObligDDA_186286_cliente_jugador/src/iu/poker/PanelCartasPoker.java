@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import logica.poker.CartaPoker;
+import logica.ssjuegos.poker.CartaPoker;
 
 /**
  *

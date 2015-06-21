@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logica.Jugador;
-import logica.poker.Apuesta;
-import logica.poker.CartaPoker;
-import logica.poker.ManoPoker;
-import logica.poker.PartidaPoker;
-import logica.poker.figuras.FiguraPoker;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.poker.Apuesta;
+import logica.ssjuegos.poker.CartaPoker;
+import logica.ssjuegos.poker.ManoPoker;
+import logica.ssjuegos.poker.PartidaPoker;
+import logica.ssjuegos.poker.figuras.FiguraPoker;
 import observableremoto.ControladorObservador;
 
 /**

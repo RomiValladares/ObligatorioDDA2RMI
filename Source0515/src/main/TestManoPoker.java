@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import logica.Jugador;
-import logica.poker.CartaPoker;
-import logica.poker.MazoPoker;
-import logica.poker.figuras.FiguraPoker;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.poker.CartaPoker;
+import logica.ssjuegos.poker.MazoPoker;
+import logica.ssjuegos.poker.figuras.FiguraPoker;
 
 //copia de ManoPoker para poder usar los metodos en TestingPoker
 public class TestManoPoker {

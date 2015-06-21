@@ -12,9 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import logica.Fachada;
-import logica.JuegoCasino;
-import logica.Jugador;
-import logica.PartidaJuegoCasino;
+import logica.ssjuegos.JuegoCasino;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.PartidaJuegoCasino;
 import observableremoto.ControladorObservador;
 
 /**

@@ -9,7 +9,7 @@ import Persistencia.Persistente;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import logica.Jugador;
+import logica.ssusuarios.Jugador;
 
 /**
  *

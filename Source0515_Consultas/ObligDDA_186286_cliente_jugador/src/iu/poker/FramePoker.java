@@ -13,14 +13,14 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import logica.Jugador;
-import logica.PartidaJuegoCasino;
-import logica.poker.CartaPoker;
-import logica.poker.EventoManoPoker;
-import logica.poker.EventoManoPoker.EventosManoPoker;
-import logica.poker.EventoPartidaPoker;
-import logica.poker.EventoPartidaPoker.EventosPartidaPoker;
-import logica.poker.PartidaPoker;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.PartidaJuegoCasino;
+import logica.ssjuegos.poker.CartaPoker;
+import logica.ssjuegos.poker.EventoManoPoker;
+import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
+import logica.ssjuegos.poker.EventoPartidaPoker;
+import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
+import logica.ssjuegos.poker.PartidaPoker;
 
 /**
  *
@@ -216,7 +216,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 // </editor-fold> 
 
     @Override
-    public synchronized void update(Observable o, Object arg) {
+    public void update(Observable o, Object arg) {
         System.out.println("FramePoker.update " + (o != null ? o.getClass() : null) + ", " + (arg != null ? arg.getClass() : null));
         //TODO revisar que comentar esto no cree bugs
         //if (o.getClass().equals(PartidaPoker.class)) {
@@ -237,7 +237,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         // }
     }
 
-    private synchronized void actualizar(EventosPartidaPoker evento) {
+    private void actualizar(EventosPartidaPoker evento) {
         if (evento.equals(EventosPartidaPoker.SALIDA_JUGADOR)) {
             if (controlador.getApuestaActual() == null) {
                 panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
@@ -247,7 +247,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         }
     }
 
-    private synchronized void actualizar(EventoManoPoker evento) {
+    private void actualizar(EventoManoPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoManoPoker " + evento);
         panelDatosPartida1.addEvento(evento);
         //TODO revisar cuando se termina la partida y eso
@@ -267,7 +267,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         }
     }
 
-    private synchronized void actualizar(EventoPartidaPoker evento) {
+    private void actualizar(EventoPartidaPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoPartidaPoker " + evento);
         if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {

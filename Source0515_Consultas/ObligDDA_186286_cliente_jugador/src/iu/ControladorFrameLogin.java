@@ -7,7 +7,7 @@ package iu;
 
 import java.rmi.RemoteException;
 import logica.Fachada;
-import logica.Usuario;
+import logica.ssusuarios.Usuario;
 import observableremoto.ControladorObservador;
 
 /**

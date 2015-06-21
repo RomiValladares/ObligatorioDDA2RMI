@@ -20,8 +20,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import logica.JuegoCasino;
-import logica.Jugador;
+import logica.ssjuegos.JuegoCasino;
+import logica.ssusuarios.Jugador;
 
 /**
  *

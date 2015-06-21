@@ -9,8 +9,8 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import logica.Jugador;
-import logica.Usuario;
+import logica.ssusuarios.Jugador;
+import logica.ssusuarios.Usuario;
 
 /**
  *

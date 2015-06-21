@@ -11,8 +11,8 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logica.Jugador;
-import logica.PartidaJuegoCasino;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.PartidaJuegoCasino;
 
 /**
  *

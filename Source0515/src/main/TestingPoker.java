@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 
 import junit.framework.TestCase;
-import logica.poker.CartaPoker;
+import logica.ssjuegos.poker.CartaPoker;
 import logica.FachadaV1;
-import logica.JuegoCasinoV1;
-import logica.Jugador;
-import logica.poker.CartaPoker.ComparadorPorNumeroCartaDesc;
-import logica.poker.MazoPoker;
-import logica.poker.figuras.Escalera;
-import logica.poker.figuras.FiguraPoker;
-import logica.poker.figuras.Par;
-import logica.poker.figuras.Pierna;
-import logica.poker.figuras.Poker;
+import logica.ssjuegos.JuegoCasinoV1;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.poker.CartaPoker.ComparadorPorNumeroCartaDesc;
+import logica.ssjuegos.poker.MazoPoker;
+import logica.ssjuegos.poker.figuras.Escalera;
+import logica.ssjuegos.poker.figuras.FiguraPoker;
+import logica.ssjuegos.poker.figuras.Par;
+import logica.ssjuegos.poker.figuras.Pierna;
+import logica.ssjuegos.poker.figuras.Poker;
 import main.TestManoPoker.JugadorYFigura;
 
 import org.junit.Rule;

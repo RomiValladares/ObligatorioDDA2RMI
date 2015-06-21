@@ -11,10 +11,10 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import logica.poker.EventoManoPoker;
-import logica.poker.EventoManoPoker.EventosManoPoker;
-import logica.poker.ManoPoker;
-import logica.poker.PartidaPoker;
+import logica.ssjuegos.poker.EventoManoPoker;
+import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
+import logica.ssjuegos.poker.ManoPoker;
+import logica.ssjuegos.poker.PartidaPoker;
 
 /**
  *

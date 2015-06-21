@@ -7,9 +7,9 @@ package iu.consultas;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import logica.DatosPartidaJuegoCasino;
+import logica.ssjuegos.DatosPartidaJuegoCasino;
 import logica.Fachada;
-import logica.JuegoCasino;
+import logica.ssjuegos.JuegoCasino;
 import observableremoto.ControladorObservador;
 
 /**

@@ -2,9 +2,9 @@ package iu;
 
 import iu.poker.FramePoker;
 import javax.swing.JFrame;
-import logica.JuegoCasino;
-import logica.Jugador;
-import logica.PartidaJuegoCasino;
+import logica.ssjuegos.JuegoCasino;
+import logica.ssusuarios.Jugador;
+import logica.ssjuegos.PartidaJuegoCasino;
 
 public class FabricadorFrameJuegos {
 

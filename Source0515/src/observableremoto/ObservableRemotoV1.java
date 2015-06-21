@@ -35,7 +35,7 @@ public class ObservableRemotoV1 extends UnicastRemoteObject
         observadores.remove(obs);
     }
 
-    public synchronized void notificar(Object param) {
+    public void notificar(Object param) {
         System.out.println("ObservableRemotoV1.notificar " + param);
         ArrayList<ObservadorRemoto> tmp = new ArrayList(observadores);
         for (ObservadorRemoto obs : tmp) {
@@ -43,7 +43,7 @@ public class ObservableRemotoV1 extends UnicastRemoteObject
         }
     }
 
-    public synchronized void notificar() {
+    public void notificar() {
         notificar(null);
     }
 

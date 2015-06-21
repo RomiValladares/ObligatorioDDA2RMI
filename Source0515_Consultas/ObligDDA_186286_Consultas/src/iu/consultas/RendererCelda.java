@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import logica.JuegoCasino;
+import logica.ssjuegos.JuegoCasino;
 
 /**
  *

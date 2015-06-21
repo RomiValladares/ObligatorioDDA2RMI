@@ -5,7 +5,7 @@
  */
 package iu.poker;
 
-import logica.Jugador;
+import logica.ssusuarios.Jugador;
 
 /**
  *
