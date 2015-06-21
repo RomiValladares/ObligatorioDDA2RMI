@@ -5,6 +5,7 @@
  */
 package iu;
 
+import iu.poker.ControladorPanelDatosJugador;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ import observableremoto.ControladorObservador;
  *
  * @author Romi
  */
-public class ControladorFrameJuegos extends ControladorObservador {
+public class ControladorFrameJuegos extends ControladorObservador implements ControladorPanelDatosJugador {
 
     private Jugador jugador;
     private Fachada modelo;
@@ -54,5 +55,4 @@ public class ControladorFrameJuegos extends ControladorObservador {
         return jugador;
     }
 
-    
 }

@@ -55,7 +55,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         }
     }
 
-    private void actualizarUI() {
+    private synchronized void actualizarUI() {
         try {
             //los paneles deberian actualizarse solos
             //panelDatosPartida1.actualizarUI();
@@ -237,7 +237,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         // }
     }
 
-    private void actualizar(EventosPartidaPoker evento) {
+    private synchronized void actualizar(EventosPartidaPoker evento) {
         if (evento.equals(EventosPartidaPoker.SALIDA_JUGADOR)) {
             if (controlador.getApuestaActual() == null) {
                 panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
@@ -247,7 +247,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         }
     }
 
-    private void actualizar(EventoManoPoker evento) {
+    private synchronized void actualizar(EventoManoPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoManoPoker " + evento);
         panelDatosPartida1.addEvento(evento);
         //TODO revisar cuando se termina la partida y eso
@@ -267,7 +267,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         }
     }
 
-    private void actualizar(EventoPartidaPoker evento) {
+    private synchronized void actualizar(EventoPartidaPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoPartidaPoker " + evento);
         if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {

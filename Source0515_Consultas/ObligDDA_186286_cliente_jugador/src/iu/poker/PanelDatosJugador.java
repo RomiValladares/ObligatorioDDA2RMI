@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 public class PanelDatosJugador extends javax.swing.JPanel {
 
     private BufferedImage image;
-    private ControladorFrameJuegos controlador;
+    private ControladorPanelDatosJugador controlador;
 
     /**
      * Creates new form PanelDatosJugador
@@ -36,7 +36,7 @@ public class PanelDatosJugador extends javax.swing.JPanel {
         }
     }
 
-    public void setControlador(ControladorFrameJuegos controlador) {
+    public void setControlador(ControladorPanelDatosJugador controlador) {
         this.controlador = controlador;
         //this.controlador.addObserver(this);
         actualizar();

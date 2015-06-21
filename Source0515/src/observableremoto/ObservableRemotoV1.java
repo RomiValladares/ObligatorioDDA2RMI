@@ -25,7 +25,6 @@ public class ObservableRemotoV1 extends UnicastRemoteObject
 
     @Override
     public void agregar(ObservadorRemoto obs) throws RemoteException {
-        System.out.println("ObservableRemotoV1.agregar ");
         if (!observadores.contains(obs)) {
             observadores.add(obs);
         }
@@ -36,16 +35,15 @@ public class ObservableRemotoV1 extends UnicastRemoteObject
         observadores.remove(obs);
     }
 
-    public void notificar(Object param) {
+    public synchronized void notificar(Object param) {
         System.out.println("ObservableRemotoV1.notificar " + param);
         ArrayList<ObservadorRemoto> tmp = new ArrayList(observadores);
         for (ObservadorRemoto obs : tmp) {
-            System.out.println("ObservableRemotoV1.notificar obs");
             new Despachador(obs, this, param, observadores).start();
         }
     }
 
-    public void notificar() {
+    public synchronized void notificar() {
         notificar(null);
     }
 

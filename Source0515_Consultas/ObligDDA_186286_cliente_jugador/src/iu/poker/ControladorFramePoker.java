@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logica.Fachada;
 import logica.Jugador;
 import logica.poker.Apuesta;
 import logica.poker.CartaPoker;
@@ -23,17 +22,20 @@ import logica.poker.figuras.FiguraPoker;
 import observableremoto.ControladorObservador;
 
 /**
+ * Este controlador NO se subscribe a la fachada porque no necesita enterarse de
+ * sus updates solo de la partida
  *
  * @author Romi
  */
-public class ControladorFramePoker extends ControladorFrameJuegos {
+public class ControladorFramePoker extends ControladorObservador implements ControladorPanelDatosJugador {
 
     //boolean para controlar que este o no en la partida (porque ya no tiene saldo)
     private boolean estaEnLaPartida = true;
     private PartidaPoker partida;
+    private Jugador jugador;
 
     ControladorFramePoker(PartidaPoker partidaPoker, Jugador jugador) throws RemoteException {
-        super(jugador);
+        this.jugador = jugador;
         this.partida = partidaPoker;
         this.partida.agregar(this);
     }
@@ -253,6 +255,11 @@ public class ControladorFramePoker extends ControladorFrameJuegos {
 
     public PartidaPoker getPartida() {
         return partida;
+    }
+
+    @Override
+    public Jugador getJugador() {
+        return jugador;
     }
 
 }

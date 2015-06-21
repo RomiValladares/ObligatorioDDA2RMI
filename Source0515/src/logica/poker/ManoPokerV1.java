@@ -126,6 +126,9 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     // <editor-fold defaultstate="collapsed" desc="METODOS APUESTA">  
     @Override
     public void apostar(Jugador jugador, double montoApostado) throws Exception {
+        if (!jugadores.contains(jugador)) {
+            throw new Exception(jugador + " no esta en esta mano.");
+        }
         double apuestaMax = getApuestaMaxima();
         if (montoApostado > apuestaMax) {
             throw new Exception("La apuesta no puede ser mayor a " + apuestaMax);
@@ -251,7 +254,10 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
 
     protected void acreditarPozoGanador(Jugador j) {
         j.agregarSaldo(pozo);
-        notificar();
+        /**
+         * TODO verificar que comentar esto no cree bugs
+         */
+//notificar();
     }
 
     @Override
