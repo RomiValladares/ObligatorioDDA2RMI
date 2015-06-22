@@ -160,7 +160,14 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     public void pasarApuesta(Jugador jugador) {
         jugadores.remove(jugador);
         cartasJugadores.remove(jugador);
-        notificar(new EventoManoPoker(null, jugador + " queda fuera."));
+
+        String nJugador = null;
+        try {
+            nJugador = jugador.getEtiqueta();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        notificar(new EventoManoPoker(null, nJugador + " queda fuera."));
         checkTerminarApuesta();
     }
 

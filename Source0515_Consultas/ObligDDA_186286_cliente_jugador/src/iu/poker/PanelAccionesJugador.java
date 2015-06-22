@@ -414,7 +414,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
 
             String ganador = null;
             try {
-                ganador = "Jugador " + ganadorYFigura.getKey().getNombre();
+                ganador = ganadorYFigura.getKey().getEtiqueta();
             } catch (RemoteException ex) {
                 Logger.getLogger(PanelAccionesJugador.class.getName()).log(Level.SEVERE, null, ex);
             }

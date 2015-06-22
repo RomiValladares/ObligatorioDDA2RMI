@@ -48,8 +48,9 @@ public class TablaPartidas extends javax.swing.JPanel {
 
     private void mostrarListaParticipantes(DatosPartidaJuegoCasino seleccionada) {
         listaParticipantes.setListData(new ArrayList<>(seleccionada.getJugadores().keySet()).toArray());
+        listaParticipantes.setCellRenderer(new RendererCelda());
         try {
-            lblGanador.setText(seleccionada.getGanador().toString());
+            lblGanador.setText(seleccionada.getGanador().getNombre());
         } catch (Exception ex) {
             Logger.getLogger(TablaPartidas.class.getName()).log(Level.SEVERE, null, ex);
         }

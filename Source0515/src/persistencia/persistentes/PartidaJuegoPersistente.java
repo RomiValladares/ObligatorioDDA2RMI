@@ -101,6 +101,7 @@ public class PartidaJuegoPersistente implements Persistente {
         if (getOid() != 0) {
             r += " AND f.oid=" + getOid();
         }
+        r += " ORDER BY f.numero";
         return r;
     }
 
@@ -128,7 +129,7 @@ public class PartidaJuegoPersistente implements Persistente {
             }
 
             u.setComienzo((Date) formato.parse(rs.getString("comienzo")));
-            if (rs.getString("final") != null) {
+            if (!rs.getString("final").equals("null")) {
                 u.setFinal((Date) formato.parse(rs.getString("final")));
             }
         } catch (Exception ex) {

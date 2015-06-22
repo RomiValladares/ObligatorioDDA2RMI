@@ -6,15 +6,13 @@
 package iu.consultas;
 
 import java.awt.Component;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import logica.ssjuegos.JuegoCasino;
+import logica.ssusuarios.Jugador;
 
 /**
  *
@@ -37,6 +35,12 @@ public class RendererCelda extends DefaultListCellRenderer {
         if (obj instanceof JuegoCasino) {
             try {
                 invoke = ((JuegoCasino) obj).getNombre();
+            } catch (RemoteException ex) {
+                Logger.getLogger(RendererCelda.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (obj instanceof Jugador) {
+            try {
+                invoke = ((Jugador) obj).getNombre();
             } catch (RemoteException ex) {
                 Logger.getLogger(RendererCelda.class.getName()).log(Level.SEVERE, null, ex);
             }

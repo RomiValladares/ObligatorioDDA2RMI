@@ -16,10 +16,12 @@ public interface Jugador extends Usuario {
 
     double getSaldo() throws RemoteException;
 
-    public String getNombre() throws RemoteException;;
+    public String getNombre() throws RemoteException;
 
     public void agregarSaldo(double pozo) throws RemoteException;
 
     public void restarSaldo(double monto) throws RemoteException;
+
+    public String getEtiqueta() throws RemoteException;
 
 }

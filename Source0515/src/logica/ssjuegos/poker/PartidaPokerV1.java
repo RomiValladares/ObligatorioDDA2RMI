@@ -238,7 +238,13 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
                 Jugador j = iterator.next().getKey();
                 if (jugadoresSaldoInsuficiente.contains(j)) {
                     iterator.remove();
-                    notificar(new EventoPartidaPoker(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE, j + " ya no tiene saldo suficiente, queda fuera del juego", j));
+                    String nJugador = null;
+                    try {
+                        nJugador = j.getEtiqueta();
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    notificar(new EventoPartidaPoker(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE, nJugador + " ya no tiene saldo suficiente, queda fuera del juego", j));
                 }
             }
         }
