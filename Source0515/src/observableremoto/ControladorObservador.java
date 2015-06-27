@@ -43,7 +43,11 @@ public class ControladorObservador extends UnicastRemoteObject
 
     public void desregistrar() {
         try {
-            observable.quitar(this);
+            //es null para aquellos que no observan la fachada
+            //como los framepoker
+            if (observable != null) {
+                observable.quitar(this);
+            }
         } catch (RemoteException ex) {
 
         }

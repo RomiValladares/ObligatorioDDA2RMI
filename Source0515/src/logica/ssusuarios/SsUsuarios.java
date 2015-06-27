@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class SsUsuarios {
 
-    private ServiciosUsuario servicios;
+    private ServiciosUsuarioV1 servicios;
 
     private static SsUsuarios instancia;
     private HashMap<String, UsuarioV1> usuariosRegistrados = new HashMap<>();

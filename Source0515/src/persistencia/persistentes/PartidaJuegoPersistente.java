@@ -37,8 +37,8 @@ public class PartidaJuegoPersistente implements Persistente {
         ArrayList r = new ArrayList();
         r.add("INSERT INTO Partidas(oid,numero,comienzo,final,duracion,total_apostado,codigo_juego)"
                 + " VALUES(" + getOid() + "," + u.getNumeroPartida() + ", '"
-                + formato.format(u.getComienzo()) + "', '"
-                + (u.getFinal() != null ? formato.format(u.getFinal()) : null) + "', "
+                + formato.format(u.getTiempoInicial()) + "', '"
+                + (u.getTiempoFinal() != null ? formato.format(u.getTiempoFinal()) : null) + "', "
                 + u.getDuracion() / 60000 + ", " + u.getTotalApostado() + ", " + getCodigoJuego() + ")");
         //guarda los jugadores solo la primera vez
         if (!u.isFinalizada()) {
@@ -66,8 +66,8 @@ public class PartidaJuegoPersistente implements Persistente {
         ArrayList r = new ArrayList();
         r.add("UPDATE Partidas SET numero=" + u.getNumeroPartida()
                 + ", duracion=" + u.getDuracion() / 60000
-                + ", comienzo='" + formato.format(u.getComienzo())
-                + "', final='" + (u.getFinal() != null ? formato.format(u.getFinal()) : null)
+                + ", comienzo='" + formato.format(u.getTiempoInicial())
+                + "', final='" + (u.getTiempoFinal() != null ? formato.format(u.getTiempoFinal()) : null)
                 + "', total_apostado=" + u.getTotalApostado() + " WHERE oid=" + getOid());
         //se actualiza para setear el ganador y las ganancias del jugador
         for (Map.Entry<Jugador, Double> entry : u.getJugadores().entrySet()) {
@@ -128,7 +128,7 @@ public class PartidaJuegoPersistente implements Persistente {
                 u.setGanador(j);
             }
 
-            u.setComienzo((Date) formato.parse(rs.getString("comienzo")));
+            u.setTiempoInicial((Date) formato.parse(rs.getString("comienzo")));
             if (!rs.getString("final").equals("null")) {
                 u.setFinal((Date) formato.parse(rs.getString("final")));
             }

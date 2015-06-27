@@ -7,23 +7,30 @@ import java.util.Observer;
 import logica.ssjuegos.JuegoCasinoV1.EventosJuegoCasino;
 
 //Observer porque observa los juegos para saber cuando se produce una nueva ganancia
+// y a ServiciosJuego para enterarse cuando cambia el ultimo numero partida
 //Observable porque la fachada lo observa
 public class SsJuegos extends Observable implements Observer {
 
-    private final ServiciosJuego servicios;
+    private final ServiciosJuegoV1 servicios;
 
     private static SsJuegos instancia;
     private ArrayList<JuegoCasinoV1> juegos;
     private double ganancias;
 
+    //lo guardo en memoria para que no sea necesario consultar la BD
+    private int ultimoNumeroPartida;
+
     private SsJuegos() {
 //        juegos = FabricadorJuegosCasino.getJuegosCasino();
         servicios = new ServiciosJuegoV1();
+        servicios.addObserver(this);
         juegos = servicios.getJuegos();
         ganancias = servicios.getGanancias();
         for (JuegoCasinoV1 juego : juegos) {
             juego.registrar(this);
         }
+        ultimoNumeroPartida = servicios.getUltimoNumeroPartida();
+        System.out.println("SsJuegos ultimoNumeroPartida=" + ultimoNumeroPartida);
     }
 
     public static SsJuegos getInstancia() {
@@ -52,9 +59,12 @@ public class SsJuegos extends Observable implements Observer {
     }
 
     private void actualizarGanancias() {
-        ganancias = 0;
+        //ganancias = 0;
         for (JuegoCasinoV1 juego : juegos) {
             ganancias += juego.getGanancias();
+            //lo reseteo para que la proxima vez que actualice
+            //no sume algo que ya sumo
+            juego.setGanancias(0);
         }
 
         servicios.setGanancias(ganancias);
@@ -81,6 +91,13 @@ public class SsJuegos extends Observable implements Observer {
     protected void guardar(DatosPartidaJuegoCasino p) {
         servicios.guardar(p);
         //TODO avisar que cambio el numero partida
+        if (p.getNumeroPartida() > ultimoNumeroPartida) {
+            ultimoNumeroPartida = p.getNumeroPartida();
+            servicios.guardar(ultimoNumeroPartida);
+            for (JuegoCasinoV1 juego : juegos) {
+                juego.setUltimoNumeroPartida(++ultimoNumeroPartida);
+            }
+        }
     }
 
     protected void modificar(DatosPartidaJuegoCasino p) {

@@ -22,7 +22,7 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
     private final String etiqueta = "POKER";
 
     public JuegoPoker() throws RemoteException {
-        crearPartida();
+        //crearPartida();
     }
 
     /*
@@ -32,9 +32,13 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
      */
     @Override
     public String getEtiqueta() {
-        return etiqueta + ", partida: " + getProximaPartida().getNumeroPartida()
-                + ", " + getProximaPartida().getJugadoresPartida().size() + "/"
-                + getProximaPartida().getCantidadMaxJugadores() + " jugadores";
+        String partida = "";
+        if (getProximaPartida() != null) {
+            partida = ", partida: " + getProximaPartida().getNumeroPartida()
+                    + ", " + getProximaPartida().getJugadoresPartida().size() + "/"
+                    + getProximaPartida().getCantidadMaxJugadores() + " jugadores";
+        }
+        return etiqueta + partida;
     }
 
     @Override
@@ -109,7 +113,7 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
                 getPartidas().add(getProximaPartida());
             }
             int ultimoNPartida = getUltimoNumeroPartida();
-            setProximaPartida(new PartidaPokerV1(++ultimoNPartida));
+            setProximaPartida(new PartidaPokerV1(ultimoNPartida++));
             setUltimoNumeroPartida(ultimoNPartida);
             getProximaPartida().agregar(this);
         } catch (RemoteException ex) {

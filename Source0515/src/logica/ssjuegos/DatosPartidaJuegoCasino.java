@@ -131,20 +131,8 @@ public class DatosPartidaJuegoCasino implements Serializable {
         return finalizada;
     }
 
-    public Date getComienzo() {
-        return tiempoInicial;
-    }
-
-    public Date getFinal() {
-        return tiempoFinal;
-    }
-
     public void setFinal(Date date) {
         tiempoFinal = date;
-    }
-
-    public void setComienzo(Date date) {
-        tiempoInicial = date;
     }
 
     protected void obtenerGanador() {

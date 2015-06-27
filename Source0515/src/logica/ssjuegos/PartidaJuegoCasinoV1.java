@@ -17,11 +17,11 @@ import observableremoto.ObservableRemotoV1;
  *
  * @author Romi
  */
-public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements PartidaJuegoCasino  {
+public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements PartidaJuegoCasino {
 
     public PartidaJuegoCasinoV1() throws RemoteException {
     }
-    
+
     private DatosPartidaJuegoCasino datos = new DatosPartidaJuegoCasino(FabricadorJuegosCasino.CodigosJuego.POKER);
 
     protected void finalizarPartida() {
@@ -36,12 +36,14 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
     }
 
     protected void comenzar() {
-        setComenzada(true);
+        if (!isComenzada()) {
+            setComenzada(true);
 
-        //comenzar timer
-        setTiempoInicial(new Date());
+            //comenzar timer
+            setTiempoInicial(new Date());
 
-        guardar();
+            guardar();
+        }
     }
 
     protected void guardar() {
@@ -133,20 +135,8 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
         return datos.isFinalizada();
     }
 
-    protected Date getComienzo() {
-        return datos.getComienzo();
-    }
-
-    protected Date getFinal() {
-        return datos.getFinal();
-    }
-
     protected void setFinal(Date date) {
         datos.setFinal(date);
-    }
-
-    protected void setComienzo(Date date) {
-        datos.setComienzo(date);
     }
 
     protected abstract void obtenerGanador();

@@ -37,5 +37,4 @@ public class ControladorFrameConsultas extends ControladorObservador {
     ArrayList<DatosPartidaJuegoCasino> getDatosPartidas(JuegoCasino juegoCasino) throws RemoteException {
         return modelo.getDatosPartidas(juegoCasino);
     }
-
 }

@@ -149,7 +149,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         apuesta.agregar(jugador);
         pozo += apuesta.getMontoApostado();
         this.montoApostado += apuesta.getMontoApostado();
-        notificar(new EventoManoPoker(null, jugador + " acepta la apuesta."));
+        notificar(new EventoManoPoker(null, jugador.getEtiqueta() + " acepta la apuesta."));
 
         if (apuesta.getJugadores().size() + 1 == jugadores.size()) {
             //notificar(new EventoManoPoker(DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));

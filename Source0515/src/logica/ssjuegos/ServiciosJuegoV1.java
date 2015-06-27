@@ -7,17 +7,17 @@ package logica.ssjuegos;
 
 import Persistencia.ManejadorBD;
 import java.util.ArrayList;
+import java.util.Observable;
 import logica.ssjuegos.FabricadorJuegosCasino.CodigosJuego;
-import logica.ssjuegos.poker.PartidaPokerV1;
 import persistencia.Parametro;
 import persistencia.persistentes.ParametrosPersistente;
 import persistencia.persistentes.PartidaJuegoPersistente;
 
 /**
- *
- * @author Romi
+ * Observable porque el SsJuegos lo observa para enterarse cuando el ultimo
+ * numero partida cambia
  */
-public class ServiciosJuegoV1 implements ServiciosJuego {
+public class ServiciosJuegoV1 extends Observable {
 
     private final String stringConexion = "jdbc:mysql://localhost/casino?user=root&password=root";
     //TODO conectarme a la BD y eso
@@ -25,25 +25,29 @@ public class ServiciosJuegoV1 implements ServiciosJuego {
 
     private ManejadorBD manejador = ManejadorBD.getInstancia();
 
-    @Override
     public ArrayList<JuegoCasinoV1> getJuegos() {
         ArrayList<JuegoCasinoV1> juegosCasino = FabricadorJuegosCasino.getJuegosCasino();
 
-        ParametrosPersistente persistente = new ParametrosPersistente(new Parametro("ultima_partida", 0));
-
-        manejador.conectar(stringConexion);
-        manejador.leerPersistente(persistente);
-        double ultimoNumeroPartida = ((Parametro) persistente.getObjeto()).getValor();
+        int ultimoNumeroPartida = getUltimoNumeroPartida();
 
         //consulta a la bd para obtener el ultimo numero de partida
         for (JuegoCasinoV1 juegoCasino : juegosCasino) {
-            juegoCasino.setUltimoNumeroPartida((int) ultimoNumeroPartida);
+            juegoCasino.setUltimoNumeroPartida((int) ++ultimoNumeroPartida);
+            //crea la partida DESPUES de haber obtenido el ultimo numero partida
+            juegoCasino.crearPartida();
         }
 
         return juegosCasino;
     }
 
-    @Override
+    public int getUltimoNumeroPartida() {
+        ParametrosPersistente persistente = new ParametrosPersistente(new Parametro("ultima_partida", 0));
+
+        manejador.conectar(stringConexion);
+        manejador.leerPersistente(persistente);
+        return (int) ((Parametro) persistente.getObjeto()).getValor();
+    }
+
     public double getGanancias() {
         ParametrosPersistente persistenteGanancias = new ParametrosPersistente(new Parametro("ganancias", 0));
 
@@ -53,7 +57,6 @@ public class ServiciosJuegoV1 implements ServiciosJuego {
         return ((Parametro) persistenteGanancias.getObjeto()).getValor();
     }
 
-    @Override
     public void setGanancias(double ganancias) {
         ParametrosPersistente persistenteGanancias = new ParametrosPersistente(new Parametro("ganancias", ganancias));
 
@@ -61,7 +64,6 @@ public class ServiciosJuegoV1 implements ServiciosJuego {
         manejador.modificar(persistenteGanancias);
     }
 
-    @Override
     public ArrayList<DatosPartidaJuegoCasino> getDatosPartidas(CodigosJuego codigoJuego) {
         PartidaJuegoPersistente persistente;
 
@@ -71,20 +73,20 @@ public class ServiciosJuegoV1 implements ServiciosJuego {
         return manejador.obtenerTodos(persistente);
     }
 
-    @Override
     public void guardar(DatosPartidaJuegoCasino p) {
         PartidaJuegoPersistente persistentePartida = new PartidaJuegoPersistente(p);
 
         manejador.conectar(stringConexion);
         manejador.agregar(persistentePartida);
+    }
 
-        ParametrosPersistente persistente = new ParametrosPersistente(new Parametro("ultima_partida", p.getNumeroPartida()));
+    public void guardar(int ultimoNumeroPartida) {
+        ParametrosPersistente persistente = new ParametrosPersistente(new Parametro("ultima_partida", ultimoNumeroPartida));
 
         manejador.conectar(stringConexion);
         manejador.modificar(persistente);
     }
 
-    @Override
     public void modificar(DatosPartidaJuegoCasino p) {
         PartidaJuegoPersistente persistente = new PartidaJuegoPersistente(p);
 

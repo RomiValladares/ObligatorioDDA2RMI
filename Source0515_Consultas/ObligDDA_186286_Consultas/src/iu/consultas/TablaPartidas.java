@@ -35,22 +35,32 @@ public class TablaPartidas extends javax.swing.JPanel {
      */
     public TablaPartidas() {
         initComponents();
+        panelAbajo.setVisible(false);
         tablaPartidas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
-                Object partidaSeleccionada = tablaPartidas.getValueAt(tablaPartidas.getSelectedRow(), 0);
-                lblParticipantesPartida.setText("Participantes partida " + partidaSeleccionada);
+                if (tablaPartidas.getSelectedRow() != -1) {
+                    Object partidaSeleccionada = tablaPartidas.getValueAt(tablaPartidas.getSelectedRow(), 0);
+                    lblParticipantesPartida.setText("Participantes partida " + partidaSeleccionada);
 
-                mostrarListaParticipantes(partidas.get(tablaPartidas.getSelectedRow()));
+                    mostrarListaParticipantes(partidas.get(tablaPartidas.getSelectedRow()));
+                } else {
+                    panelAbajo.setVisible(false);
+                }
             }
         });
     }
 
     private void mostrarListaParticipantes(DatosPartidaJuegoCasino seleccionada) {
+        panelAbajo.setVisible(true);
         listaParticipantes.setListData(new ArrayList<>(seleccionada.getJugadores().keySet()).toArray());
         listaParticipantes.setCellRenderer(new RendererCelda());
         try {
-            lblGanador.setText(seleccionada.getGanador().getNombre());
+            if (seleccionada.getGanador() != null) {
+                lblGanador.setText(seleccionada.getGanador().getNombre());
+            } else {
+                lblGanador.setText("-");
+            }
         } catch (Exception ex) {
             Logger.getLogger(TablaPartidas.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,14 +78,18 @@ public class TablaPartidas extends javax.swing.JPanel {
         lblPartidasJuego = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPartidas = new javax.swing.JTable();
-        jSeparator1 = new javax.swing.JSeparator();
-        lblParticipantesPartida = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         comboJuegos = new javax.swing.JComboBox();
+        panelAbajo = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         listaParticipantes = new javax.swing.JList();
-        jLabel1 = new javax.swing.JLabel();
         lblGanador = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        lblParticipantesPartida = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+
+        setMaximumSize(new java.awt.Dimension(508, 375));
+        setMinimumSize(new java.awt.Dimension(508, 375));
 
         lblPartidasJuego.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblPartidasJuego.setText("Partidas juego {juego}");
@@ -108,9 +122,6 @@ public class TablaPartidas extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablaPartidas);
 
-        lblParticipantesPartida.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        lblParticipantesPartida.setText("Participantes partida {n}");
-
         jLabel2.setText("Seleccione un juego:");
 
         comboJuegos.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -127,11 +138,50 @@ public class TablaPartidas extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(listaParticipantes);
 
+        lblGanador.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblGanador.setText("jLabel3");
+
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Ganador:");
 
-        lblGanador.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblGanador.setText("jLabel3");
+        lblParticipantesPartida.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblParticipantesPartida.setText("Participantes partida {n}");
+
+        javax.swing.GroupLayout panelAbajoLayout = new javax.swing.GroupLayout(panelAbajo);
+        panelAbajo.setLayout(panelAbajoLayout);
+        panelAbajoLayout.setHorizontalGroup(
+            panelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAbajoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblParticipantesPartida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAbajoLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblGanador, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70))
+            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        panelAbajoLayout.setVerticalGroup(
+            panelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAbajoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelAbajoLayout.createSequentialGroup()
+                        .addComponent(lblParticipantesPartida)
+                        .addGap(18, 18, 18)
+                        .addGroup(panelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(lblGanador)))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -140,28 +190,16 @@ public class TablaPartidas extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jSeparator1)
-                    .addComponent(lblPartidasJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblParticipantesPartida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblGanador, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(48, 48, 48)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)))
+                    .addComponent(panelAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                    .addComponent(lblPartidasJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(104, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(comboJuegos, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79))
+                .addGap(100, 100, 100))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,17 +212,8 @@ public class TablaPartidas extends javax.swing.JPanel {
                 .addComponent(lblPartidasJuego)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblParticipantesPartida)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(lblGanador)))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(panelAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -194,6 +223,7 @@ public class TablaPartidas extends javax.swing.JPanel {
     }//GEN-LAST:event_comboJuegosActionPerformed
 
     private void actualizarLabelPartida() {
+        panelAbajo.setVisible(false);
         try {
             lblPartidasJuego.setText("Partidas Juego " + juegos.get(comboJuegos.getSelectedIndex()).getNombre());
         } catch (RemoteException ex) {
@@ -212,6 +242,7 @@ public class TablaPartidas extends javax.swing.JPanel {
     private javax.swing.JLabel lblParticipantesPartida;
     private javax.swing.JLabel lblPartidasJuego;
     private javax.swing.JList listaParticipantes;
+    private javax.swing.JPanel panelAbajo;
     private javax.swing.JTable tablaPartidas;
     // End of variables declaration//GEN-END:variables
 
@@ -237,8 +268,8 @@ public class TablaPartidas extends javax.swing.JPanel {
         int fila = 0;
         for (DatosPartidaJuegoCasino partidaJuegoCasino : partidas) {
             String[] datos = new String[]{"" + partidaJuegoCasino.getNumeroPartida(),
-                "" + partidaJuegoCasino.getComienzo(),
-                "" + partidaJuegoCasino.getFinal(),
+                "" + partidaJuegoCasino.getTiempoInicial(),
+                "" + partidaJuegoCasino.getTiempoFinal(),
                 "" + partidaJuegoCasino.getDuracion(),
                 "" + partidaJuegoCasino.getTotalApostado()};
             objs[fila++] = armarFila(columnasTablaPartidas.length, datos);
