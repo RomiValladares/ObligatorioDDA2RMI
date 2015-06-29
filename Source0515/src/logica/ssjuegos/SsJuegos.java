@@ -58,7 +58,7 @@ public class SsJuegos extends Observable implements Observer {
         notifyObservers();
     }
 
-    private void actualizarGanancias() {
+    protected void actualizarGanancias() {
         //ganancias = 0;
         for (JuegoCasinoV1 juego : juegos) {
             ganancias += juego.getGanancias();

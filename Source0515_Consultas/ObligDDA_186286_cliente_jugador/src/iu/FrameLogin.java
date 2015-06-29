@@ -23,8 +23,8 @@ public class FrameLogin extends javax.swing.JDialog {
     /**
      * Creates new form FrameLogin
      */
-    public FrameLogin(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public FrameLogin() {
+        super();
         initComponents();
 
         //para que muestre los caracteres

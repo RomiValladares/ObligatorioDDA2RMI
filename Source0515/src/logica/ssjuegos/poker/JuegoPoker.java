@@ -42,10 +42,10 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
     }
 
     @Override
-    public PartidaJuegoCasino jugar(Jugador nuevoJugador) throws Exception {
+    public PartidaJuegoCasino jugar(Jugador nuevoJugador, ObservadorRemoto obs) throws Exception {
         // TODO Auto-generated method stub
 
-        getProximaPartida().agregar(nuevoJugador);
+        getProximaPartida().agregar(nuevoJugador, obs);
 
         if (getProximaPartida() == null || getProximaPartida().isComenzada()) {
             crearPartida();

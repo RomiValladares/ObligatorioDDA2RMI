@@ -36,7 +36,7 @@ public class ObservableRemotoV1 extends UnicastRemoteObject
     }
 
     public void notificar(Object param) {
-        System.out.println("ObservableRemotoV1.notificar " + param);
+        System.out.println("ObservableRemotoV1.notificar " + param + " " + observadores.size() + " observadores");
         ArrayList<ObservadorRemoto> tmp = new ArrayList(observadores);
         for (ObservadorRemoto obs : tmp) {
             new Despachador(obs, this, param, observadores).start();

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package iu.poker;
 
 import java.awt.event.ActionEvent;
@@ -11,8 +10,8 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logica.ssusuarios.Jugador;
 import logica.ssjuegos.PartidaJuegoCasino;
+import logica.ssusuarios.Jugador;
 
 /**
  *
@@ -27,7 +26,35 @@ public class PanelFinPartida extends javax.swing.JPanel {
         initComponents();
     }
 
-    public PanelFinPartida(final FramePoker parent, PartidaJuegoCasino partida, final Jugador ganador, final Jugador jugadorLogueado) {
+    public PanelFinPartida(final FramePoker parent, PartidaJuegoCasino partida) {
+        this(parent, partida, "No hubo ganador");
+    }
+
+    public PanelFinPartida(final FramePoker parent, PartidaJuegoCasino partida, String mensaje) {
+        this();
+        try {
+            lblFinDePartida.setText("Fin de la partida " + partida.getNumeroPartida());
+        } catch (RemoteException ex) {
+            Logger.getLogger(PanelFinPartida.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        lblGanador.setText(mensaje);
+        btnCerrarDialog.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parent.cerrar();
+            }
+        });
+    }
+
+    /**
+     * constructor para cuando hay ganador
+     *
+     * @param parent
+     * @param partida
+     * @param ganador
+     */
+    public PanelFinPartida(final FramePoker parent, PartidaJuegoCasino partida, final Jugador ganador) {
         this();
         try {
             lblFinDePartida.setText("Fin de la partida " + partida.getNumeroPartida());

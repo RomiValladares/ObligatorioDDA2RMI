@@ -8,8 +8,6 @@ package iu;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import logica.Fachada;
 import observableremoto.ControladorObservador;
 
@@ -37,7 +35,7 @@ public class ControladorFrameCasino extends ControladorObservador {
     }
 
     void nuevaInterfazJugador(FrameCasino parent) {
-        FrameLogin frameJugador = new FrameLogin(parent, true);
+        FrameLogin frameJugador = new FrameLogin();
         frameJugador.setVisible(true);
     }
 

@@ -5,7 +5,6 @@
  */
 package iu.poker;
 
-import iu.ControladorFrameJuegos;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;

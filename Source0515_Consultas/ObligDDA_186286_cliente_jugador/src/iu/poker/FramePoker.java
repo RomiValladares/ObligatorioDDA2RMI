@@ -13,14 +13,13 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import logica.ssusuarios.Jugador;
-import logica.ssjuegos.PartidaJuegoCasino;
+import logica.ssjuegos.JuegoCasino;
 import logica.ssjuegos.poker.CartaPoker;
 import logica.ssjuegos.poker.EventoManoPoker;
 import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
 import logica.ssjuegos.poker.EventoPartidaPoker;
 import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
-import logica.ssjuegos.poker.PartidaPoker;
+import logica.ssusuarios.Jugador;
 
 /**
  *
@@ -32,16 +31,13 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     private boolean ingresoAPartida;
     private ControladorFramePoker controlador;
 
-    /**
-     * Creates new form FramePoker
-     */
-    public FramePoker(PartidaJuegoCasino partida, Jugador jugador) {
+    public FramePoker(JuegoCasino juego, Jugador jugador) {
         setImagenFondo("src/imgs/poker_fondo.jpg");
         initComponents();
         setJugador(jugador);
 
         try {
-            controlador = new ControladorFramePoker((PartidaPoker) partida, jugador);
+            controlador = new ControladorFramePoker(juego, jugador);
             controlador.addObserver(this);
             panelDatosJugador1.setControlador(controlador);
             panelDatosPartida1.setControlador(controlador);
@@ -217,7 +213,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("FramePoker.update " + (o != null ? o.getClass() : null) + ", " + (arg != null ? arg.getClass() : null));
+        System.out.println("FramePoker.update class=" + (o != null ? o.getClass() : null) + ", arg class=" + (arg != null ? arg.getClass() : null) + ", arg toString=" + (arg != null ? arg.toString() : null));
         //TODO revisar que comentar esto no cree bugs
         //if (o.getClass().equals(PartidaPoker.class)) {
         panelDatosJugador1.actualizar();
@@ -243,33 +239,44 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                 panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
             }
         } else {
+            panelDatosPartida1.addEvento(evento);
             actualizarUI();
         }
     }
 
     private void actualizar(EventoManoPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoManoPoker " + evento);
-        panelDatosPartida1.addEvento(evento);
-        //TODO revisar cuando se termina la partida y eso
-        if (evento.getEvento() != EventosManoPoker.GANADOR) {
-            setAccionJugador(evento.getEvento());
+        if (evento.getEvento() != null && evento.getEvento().equals(EventosManoPoker.DESCARTAR_CARTAS)) {
+            if (controlador.jugadorAceptoApuesta()) {
+                setModoDescartarse(true);
+            }
         } else {
-            panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), controlador.getTotalJugadoresApuesta());
-        }
-        if (evento.getEvento() == EventosManoPoker.FINALIZO_MANO) {
-            if (controlador.getGanadorManoActual() == null) {//partida.getManoActual().getGanadorYFigura()
-                //todos pasaron y no hubo ganador
-                panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), 0);
+            panelDatosPartida1.addEvento(evento);
+
+            if (evento.getEvento() != EventosManoPoker.GANADOR) {
+                setAccionJugador(evento);
             } else {
                 panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), controlador.getTotalJugadoresApuesta());
             }
-            controlador.checkPuedeJugar();
+            if (evento.getEvento() == EventosManoPoker.FINALIZO_MANO) {
+                if (controlador.getGanadorManoActual() == null) {//partida.getManoActual().getGanadorYFigura()
+                    //todos pasaron y no hubo ganador
+                    panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), 0);
+                } else {
+                    panelAccionesJugador.mostrarPanelDialog(evento, controlador.getGanadorManoActual(), controlador.getTotalJugadoresApuesta());
+                }
+                controlador.checkPuedeJugar();
+            }
         }
     }
 
     private void actualizar(EventoPartidaPoker evento) {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoPartidaPoker " + evento);
-        if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
+        if (evento.getEvento().equals(EventosPartidaPoker.TIMEOUT_JUGADOR)) {
+            if (evento.getJugador().equals(getJugador())) {
+                mostrarDialogoFinPartida(evento);
+            }
+        } else if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {
                 mostrarDialogoFinPartida(evento);
             } else if (evento.getEvento().equals(EventosPartidaPoker.SALIDA_JUGADOR)) {
@@ -285,6 +292,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
             } else if (evento.getJugador().equals(getJugador())) {
                 panelAccionesJugador.mostrarPanelDialog(evento);
             } else {
+                panelDatosPartida1.addEvento(evento.getEvento());
                 actualizarUI();
             }
         }
@@ -303,20 +311,18 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     //reemplaza el panelAccionJugador con un panel para realizar una apuesta/pasar, esperando, etc
-    private void setAccionJugador(EventosManoPoker accion) {
+    private void setAccionJugador(EventoManoPoker accion) {
         if (accion != null) {
-            switch (accion) {
+            switch (accion.getEvento()) {
                 case COMENZO_MANO:
                     panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
                     actualizarCartas();
                     break;
                 case NUEVA_APUESTA:
-                    panelAccionesJugador.setTextNuevaApuesta(controlador.getApuesta().getEtiqueta() + ". Entrar en la apuesta?");
                     if (controlador.jugadorAposto()) {
-                        setModoDescartarse(true);
+                        panelAccionesJugador.mostrarPanelEsperando("Esperando...");
                     } else {
-                        panelAccionesJugador.setEsperandoVisible(false);
-                        panelAccionesJugador.setAceptarApuestaVisible(true);
+                        mostrarPanelApuesta();
                     }
                     break;
                 case DESCARTAR_CARTAS:
@@ -324,6 +330,16 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                     break;
             }
         }
+    }
+
+    private void mostrarPanelApuesta() {
+        panelAccionesJugador.setTextNuevaApuesta(controlador.getApuesta().getEtiqueta() + ". Entrar en la apuesta?");
+//                    if (controlador.jugadorAposto()) {
+//                        setModoDescartarse(true);
+//                    } else {
+        panelAccionesJugador.setEsperandoVisible(false);
+        panelAccionesJugador.setAceptarApuestaVisible(true);
+//                    }
     }
 
     /*
@@ -354,7 +370,11 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     private void mostrarDialogoFinPartida(EventoPartidaPoker evento) {
         try {
-            panelAccionesJugador.mostrarDialogFinPartida(controlador.getPartida(), controlador.getGanadorPartida(), getJugador());
+            if (!evento.getEvento().equals(EventosPartidaPoker.TIMEOUT_JUGADOR)) {
+                panelAccionesJugador.mostrarDialogFinPartida(controlador.getPartida(), controlador.getGanadorPartida(), getJugador());
+            } else {
+                panelAccionesJugador.mostrarDialogFinPartida(controlador.getPartida(), null, getJugador());
+            }
         } catch (Exception ex) {
             Logger.getLogger(FramePoker.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -375,7 +395,8 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         try {
 //            partida.getManoActual().aceptarApuesta(getJugador());
             controlador.aceptarApuesta();
-            setModoDescartarse(true);
+            mostrarPanelApuesta();
+//            setModoDescartarse(true);
         } catch (Exception ex) {
             Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());

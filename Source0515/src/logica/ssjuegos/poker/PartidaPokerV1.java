@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 import logica.ssjuegos.JuegoCasinoV1.EventosJuegoCasino;
 import logica.ssjuegos.PartidaJuegoCasinoV1;
 import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
+import logica.ssjuegos.poker.figuras.FiguraPoker;
 import logica.ssusuarios.Jugador;
+import observableremoto.ObservadorRemoto;
 
 /*
  * Observable porque FramePoker lo observa
@@ -24,35 +26,43 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     private ManoPokerV1 manoActual;
     private int cantidadMaxJugadores = 4;
     private double apuestaBase = 50;
+    private boolean primeraMano;
 
     @Override
     public void retirarse(Jugador jugador) throws Exception {
-        if (getJugadores().containsKey(jugador)) {
-            if (manoActual != null && !manoActual.isFinalizada()) {
-                if (!isFinalizada()) {
-                    //agrego ese chequeo para un caso en especial
-                    //la mano no termino pero si la partida
-                    //cuando los jugadores se retiran y queda uno que aposto
-                    manoActual.retirarse(jugador);
-                }
-            }
-            //resta el 10% de lo ganado
-            restarGanancias(jugador);
-            getJugadores().remove(jugador);
+        quitarJugador(jugador);
 
-            //esto es para cuando un jugador elija retirarse sin que haya empezado la partida
-            if (isComenzada() && getJugadores().size() == 1 && !isFinalizada()) {
-                finalizarPartida();
-            } else {
-                notificar(new EventoPartidaPoker(EventosPartidaPoker.SALIDA_JUGADOR, jugador + " sale del juego.", jugador));
-            }
-            if (jugadoresQueSiguen == getJugadores().size() && isComenzada()) {
-                jugadoresQueSiguen = 0;
-                comenzar();
-            }
+        //aca llega solo si no hubo excepcion
+        //esto es para cuando un jugador elija retirarse sin que haya empezado la partida
+        if (isComenzada() && getJugadores().size() == 1 && !isFinalizada()) {
+            finalizarPartida();
         } else {
-            throw new Exception("El jugador no esta en esta partida.");
+            notificar(new EventoPartidaPoker(EventosPartidaPoker.SALIDA_JUGADOR, jugador + " sale del juego.", jugador));
         }
+        if (jugadoresQueSiguen == getJugadores().size() && isComenzada()) {
+            jugadoresQueSiguen = 0;
+            comenzar();
+        }
+    }
+
+    @Override
+    protected void quitarJugador(Jugador jugador) throws Exception {
+        super.quitarJugador(jugador);
+        //if (getJugadores().containsKey(jugador)) {
+        if (manoActual != null && !manoActual.isFinalizada()) {
+            if (!isFinalizada()) {
+                //agrego ese chequeo para un caso en especial
+                //la mano no termino pero si la partida
+                //cuando los jugadores se retiran y queda uno que aposto
+                manoActual.retirarse(jugador);
+            }
+        }
+        //resta el 10% de lo ganado
+        restarGanancias(jugador);
+        getJugadores().remove(jugador);
+//        } else {
+//            throw new Exception("El jugador no esta en esta partida.");
+//        }
     }
 
     @Override
@@ -77,27 +87,18 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     private int jugadoresQueSiguen = 0;
 
-    //se invoca cada vez que termina una mano y se les pregunta a los jugadores si seguir o no
-    @Override
-    public void continuarEnJuego(Jugador jugador, boolean seguir) throws Exception {
-        if (!seguir) {
-            retirarse(jugador);
-        } else {
-            Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.INFO, null, "continuarEnJuego " + jugador);
-            jugadoresQueSiguen++;
-            Logger.getLogger("jugadoresQueSiguen " + jugadoresQueSiguen + " jugadores.size()=" + getJugadores().size());
-            if (jugadoresQueSiguen == getJugadores().size()) {
-                jugadoresQueSiguen = 0;
-                comenzar();
-            }
-        }
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         //TODO verificar que comentar esto no cree bugs
         //if (o.getClass().equals(ManoPoker.class)) {
+        if (arg instanceof EventoManoPoker && ((EventoManoPoker) arg).getEvento() != null) {
+            if (((EventoManoPoker) arg).getEvento().equals(EventoManoPoker.EventosManoPoker.COMENZO_MANO) && primeraMano) {
+                notificar(EventosPartidaPoker.COMENZO_PARTIDA);
+            }
+        }
+
         if (manoActual.isFinalizada()) {
+            cancelarTimer();
             setTotalApostado(getTotalApostado() + manoActual.getMontoApostado());
             if (manoActual.getGanadorYFigura() != null) {
                 //actualiza el saldo del jugador
@@ -158,9 +159,9 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         setNumeroPartida(numeroPartida);
     }
 
-    @Override
-    public void agregar(Jugador nuevoJugador) throws Exception {
+    public void agregar(Jugador nuevoJugador, ObservadorRemoto obs) throws Exception {
         if (puedeJugar(nuevoJugador)) {
+            agregar(obs);
             getJugadores().put(nuevoJugador, 0d);
 
             if (getJugadores().size() == cantidadMaxJugadores) {
@@ -178,7 +179,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         //se asume que de afuera ya se controlo que todos los jugadores tuvieran saldo disponible
         descontarSaldo();
 
-        boolean primeraMano = false;
+        primeraMano = false;
         if (manoActual == null) {
             primeraMano = true;
         }
@@ -189,9 +190,6 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             nuevaMano(0);
         }
 
-        if (primeraMano) {
-            notificar(EventosPartidaPoker.COMENZO_PARTIDA);
-        }
         //si no ya avisa la nueva mano
     }
 
@@ -210,6 +208,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             manoActual = new ManoPokerV1(new ArrayList<>(getJugadores().keySet()), apuestaBase, pozoAcumulado);
             manoActual.addObserver(this);
             manoActual.comenzar();
+
+            empezarTimer();
         } catch (RemoteException ex) {
             Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -256,12 +256,97 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     }
 
     @Override
+    public ManoPoker getManoActual() {
+        return manoActual;
+    }
+
+    //se invoca cada vez que termina una mano y se les pregunta a los jugadores si seguir o no
+    @Override
+    public void continuarEnJuego(Jugador jugador, boolean seguir) throws Exception {
+        if (!seguir) {
+            retirarse(jugador);
+        } else {
+            Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.INFO, null, "continuarEnJuego " + jugador);
+            jugadoresQueSiguen++;
+            Logger.getLogger("jugadoresQueSiguen " + jugadoresQueSiguen + " jugadores.size()=" + getJugadores().size());
+            if (jugadoresQueSiguen == getJugadores().size()) {
+                jugadoresQueSiguen = 0;
+                comenzar();
+            }
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="METODOS DELEGADOS MANO ACTUAL">  
+    @Override
     public List<CartaPoker> getCartasJugador(Jugador j) throws Exception {
         return manoActual.getCartasJugador(j);
     }
 
     @Override
-    public ManoPoker getManoActual() {
-        return manoActual;
+    public void pasar(Jugador jugador) {
+        setJugadorActivo(jugador);
+        manoActual.pasar(jugador);
+    }
+
+    @Override
+    public void apostar(Jugador jugador, double montoApostado) throws Exception {
+        setJugadorActivo(jugador);
+        manoActual.apostar(jugador, montoApostado);
+
+        empezarTimer();
+    }
+
+    @Override
+    public void aceptarApuesta(Jugador jugador) throws Exception {
+        setJugadorActivo(jugador);
+        manoActual.aceptarApuesta(jugador);
+    }
+
+    @Override
+    public List<CartaPoker> descartarse(Jugador j, List<CartaPoker> cartasDescartadas) throws Exception {
+        setJugadorActivo(j);
+        return manoActual.descartarse(j, cartasDescartadas);
+    }
+
+    @Override
+    public Map.Entry<Jugador, FiguraPoker> getGanadorYFiguraManoActual() throws RemoteException {
+        return manoActual.getGanadorYFigura();
+    }
+
+    @Override
+    public void pasarApuesta(Jugador jugador) throws RemoteException {
+        setJugadorActivo(jugador);
+        manoActual.pasarApuesta(jugador);
+    }
+
+    // </editor-fold> 
+    @Override
+    protected void timeout(ArrayList<Jugador> jugadoresTimeout) {
+        System.out.println("timeout");
+        if (isCronometrada()) {
+            ArrayList<Jugador> jugadoresTimeout1 = new ArrayList<>(jugadoresTimeout);
+            for (Jugador j : jugadoresTimeout1) {
+                if (this.getJugadores().containsKey(j)) {
+                    try {
+                        notificar(new EventoPartidaPoker(EventosPartidaPoker.TIMEOUT_JUGADOR, j.getEtiqueta() + " queda fuera por timeout.", j));
+                        quitarJugador(j);
+                    } catch (Exception ex) {
+                        //no deberia nunca dar una excepcion
+                        Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+            //aca llega solo si no hubo excepcion
+            //esto es para cuando un jugador elija retirarse sin que haya empezado la partida
+            if (isComenzada() && getJugadores().size() <= 1 && !isFinalizada()) {
+                finalizarPartida();
+            }
+        }
+    }
+
+    @Override
+    public boolean jugadorAceptoApuesta(Jugador j) throws RemoteException {
+        return manoActual.jugadorAceptoApuesta(j);
     }
 }

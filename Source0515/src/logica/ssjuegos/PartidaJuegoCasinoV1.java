@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Observable;
+import logica.Timer;
 import logica.ssusuarios.Jugador;
 import observableremoto.ObservableRemotoV1;
 
@@ -19,7 +20,20 @@ import observableremoto.ObservableRemotoV1;
  */
 public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements PartidaJuegoCasino {
 
+    /**
+     * para saber si usa timer o no
+     */
+    private boolean cronometrada = false;
+    private PartidaTareaTimer timer;
+    private int tiempoTimer = 10000;
+
     public PartidaJuegoCasinoV1() throws RemoteException {
+    }
+
+    public PartidaJuegoCasinoV1(boolean timed, int tiempo) throws RemoteException {
+        this.cronometrada = timed;
+        this.tiempoTimer = tiempo;
+        timer = new PartidaTareaTimer(tiempoTimer, this);
     }
 
     private DatosPartidaJuegoCasino datos = new DatosPartidaJuegoCasino(FabricadorJuegosCasino.CodigosJuego.POKER);
@@ -46,6 +60,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="DB">  
     protected void guardar() {
         SsJuegos.getInstancia().guardar(datos);
     }
@@ -53,8 +68,9 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
     protected void modificar() {
         SsJuegos.getInstancia().modificar(datos);
     }
+// </editor-fold> 
 
-    //METODOS DELEGADOS
+    // <editor-fold defaultstate="collapsed" desc="GETTERS/SETTERS">  
     @Override
     public int getNumeroPartida() {
         return datos.getNumeroPartida();
@@ -165,5 +181,45 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
     public ArrayList<Jugador> getJugadoresPartida() {
         return new ArrayList<Jugador>(datos.getJugadores().keySet());
     }
+// </editor-fold> 
 
+    protected void setJugadorActivo(Jugador j) {
+        if (cronometrada && timer != null) {
+            timer.remove(j);
+        }
+    }
+
+    //el throws exception es porque la partida poker tira excepcion nomas
+    protected void quitarJugador(Jugador j) throws Exception {
+        if (getJugadores().containsKey(j)) {
+            setJugadorActivo(j);
+        } else {
+            throw new Exception("El jugador no esta en esta partida.");
+        }
+    }
+
+    protected void empezarTimer() {
+        System.out.println("empezarTimer");
+        cancelarTimer();
+        timer = new PartidaTareaTimer(tiempoTimer, this, getJugadoresPartida());
+        timer.comenzar();
+    }
+
+    protected void cancelarTimer() {
+        if (timer != null) {
+            timer.cancelar();
+        }
+    }
+
+    public boolean isCronometrada() {
+        return cronometrada;
+    }
+
+    /**
+     * *
+     *
+     * @param jugadoresTimeout que no hicieron nada antes de que terminara el
+     * timer
+     */
+    protected abstract void timeout(ArrayList<Jugador> jugadoresTimeout);
 }

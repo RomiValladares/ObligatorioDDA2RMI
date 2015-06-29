@@ -10,6 +10,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Observable;
 import logica.ssusuarios.Jugador;
+import observableremoto.ObservadorRemoto;
 
 /**
  *
@@ -36,7 +37,7 @@ public interface JuegoCasino extends Remote {
     /*
      * Agrega un jugador a la partida que corresponda
      */
-    PartidaJuegoCasino jugar(Jugador nuevoJugador) throws RemoteException, Exception;
+    PartidaJuegoCasino jugar(Jugador nuevoJugador, ObservadorRemoto obs) throws RemoteException, Exception;
 
     /*
      * validacion previa para ingresar al juego

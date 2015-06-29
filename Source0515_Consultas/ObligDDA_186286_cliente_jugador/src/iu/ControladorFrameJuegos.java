@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import logica.Fachada;
 import logica.ssjuegos.JuegoCasino;
-import logica.ssjuegos.PartidaJuegoCasino;
 import logica.ssusuarios.DatosUsuario;
 import logica.ssusuarios.Jugador;
 import observableremoto.ControladorObservador;
@@ -47,9 +46,7 @@ public class ControladorFrameJuegos extends ControladorObservador implements Con
 
     void ingresar(JuegoCasino juego) throws RemoteException, Exception {
         if (juego != null && juego.puedeJugar(jugador)) {
-            PartidaJuegoCasino p = juego.jugar(jugador);
-
-            JFrame frameJuego = FabricadorFrameJuegos.getVentanaJuego(juego, jugador, p);
+            JFrame frameJuego = FabricadorFrameJuegos.getVentanaJuego(juego, jugador);
             frameJuego.setVisible(true);
         }
     }

@@ -109,10 +109,15 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         }
     }
 
-    @Override
     public void pasar(Jugador jugador) {
         cantJugadoresQuePasaron++;
-        notificar(new EventoManoPoker(null, jugador + " pasa."));
+        String j = "";
+        try {
+            j = jugador.getEtiqueta();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        notificar(new EventoManoPoker(null, j + " pasa."));
         if (cantJugadoresQuePasaron == jugadores.size()) {
             //todos pasaron, finaliza la mano
             finalizar();
@@ -125,7 +130,6 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     }
 
     // <editor-fold defaultstate="collapsed" desc="METODOS APUESTA">  
-    @Override
     public void apostar(Jugador jugador, double montoApostado) throws Exception {
         if (!jugadores.contains(jugador)) {
             throw new Exception(jugador + " no esta en esta mano.");
@@ -144,7 +148,6 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         }
     }
 
-    @Override
     public void aceptarApuesta(Jugador jugador) throws Exception {
         apuesta.agregar(jugador);
         pozo += apuesta.getMontoApostado();
@@ -152,11 +155,10 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         notificar(new EventoManoPoker(null, jugador.getEtiqueta() + " acepta la apuesta."));
 
         if (apuesta.getJugadores().size() + 1 == jugadores.size()) {
-            //notificar(new EventoManoPoker(DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));
+            notificar(new EventoManoPoker(EventosManoPoker.DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));
         }
     }
 
-    @Override
     public void pasarApuesta(Jugador jugador) {
         jugadores.remove(jugador);
         cartasJugadores.remove(jugador);
@@ -182,6 +184,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     @Override
     public double getApuestaMaxima() {
         double saldoMinimo = Double.MAX_VALUE;
+        System.out.println("manopoker getapuestamaxima jugadores " + jugadores.size());
         for (Jugador j : jugadores) {
             /**
              * TODO este try catch is re what spanglish
@@ -207,11 +210,24 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
                 //significa que solo uno aposto, por lo tanto gana
                 ganadorYFigura = new SimpleEntry<>(apuesta.getJugador(), null);
                 acreditarPozoGanador(apuesta.getJugador());
-                notificar(new EventoManoPoker(EventosManoPoker.GANADOR, apuesta.getJugador() + " gana porque nadie mas aposto."));
+
+                String jugador = "";
+                try {
+                    jugador = apuesta.getJugador().getEtiqueta();
+                } catch (RemoteException ex) {
+                    Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                notificar(new EventoManoPoker(EventosManoPoker.GANADOR, jugador + " gana porque nadie mas aposto."));
             } else {
                 ganadorYFigura = obtenerGanador();
                 acreditarPozoGanador(ganadorYFigura.getKey());
-                notificar(new EventoManoPoker(EventosManoPoker.GANADOR, ganadorYFigura.getKey() + " gano con figura " + ganadorYFigura.getValue()));
+                String jugador = "";
+                try {
+                    jugador = ganadorYFigura.getKey().getEtiqueta();
+                } catch (RemoteException ex) {
+                    Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                notificar(new EventoManoPoker(EventosManoPoker.GANADOR, jugador + " gano con figura " + ganadorYFigura.getValue()));
             }
 
             finalizar();
@@ -243,11 +259,9 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         return cartasJugador;
     }
 
-    /*
-     * descarta las cartas que recibe
-     * y devuelve cartas nuevas
+    /**
+     * descarta las cartas que recibe y devuelve cartas nuevas
      */
-    @Override
     public List<CartaPoker> descartarse(Jugador j, List<CartaPoker> cartasDescartadas) throws Exception {
         if (apuesta.getJugadores().contains(j) || apuesta.getJugador().equals(j)) {
             apuesta.descartarse(j);
@@ -279,7 +293,6 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         }
     }
 
-    @Override
     public Entry<Jugador, FiguraPoker> getGanadorYFigura() {
         return ganadorYFigura;
     }
@@ -308,6 +321,15 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
 
     protected double getMontoApostado() {
         return montoApostado;
+    }
+
+    boolean jugadorAceptoApuesta(Jugador j) {
+        if (apuesta != null) {
+            if (apuesta.getJugadores().contains(j) || apuesta.getJugador().equals(j)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //clase wrapper para ordenar el array de jugadores-figuras

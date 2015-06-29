@@ -3,16 +3,15 @@ package iu;
 import iu.poker.FramePoker;
 import javax.swing.JFrame;
 import logica.ssjuegos.JuegoCasino;
-import logica.ssjuegos.PartidaJuegoCasino;
 import logica.ssusuarios.Jugador;
 
 public class FabricadorFrameJuegos {
 
-    public static JFrame getVentanaJuego(JuegoCasino juego, Jugador jugador, PartidaJuegoCasino partida) throws Exception {
+    public static JFrame getVentanaJuego(JuegoCasino juego, Jugador jugador) throws Exception {
         try {
             switch (juego.getCodigo()) {
                 case POKER:
-                    return new FramePoker(partida, jugador);
+                    return new FramePoker(juego, jugador);
             }
         } catch (Exception ex) {
             throw ex;

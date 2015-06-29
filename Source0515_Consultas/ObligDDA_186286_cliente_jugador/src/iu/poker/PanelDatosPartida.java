@@ -14,8 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import logica.ssjuegos.poker.EventoManoPoker;
 import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
-import logica.ssjuegos.poker.ManoPoker;
-import logica.ssjuegos.poker.PartidaPoker;
+import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
 
 /**
  *
@@ -196,6 +195,10 @@ public class PanelDatosPartida extends javax.swing.JPanel implements Observer {
         } else {
             modelListEventosMano.addElement(eventosManoPoker.getDescripcion());
         }
+    }
+
+    public void addEvento(EventosPartidaPoker ev) {
+        modelListEventosMano.addElement(ev);
     }
 
     void setControlador(ControladorFramePoker controlador) {

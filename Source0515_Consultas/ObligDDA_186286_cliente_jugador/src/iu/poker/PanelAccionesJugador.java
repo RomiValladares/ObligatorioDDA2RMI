@@ -5,10 +5,8 @@
  */
 package iu.poker;
 
-import iu.FrameLogin;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -20,13 +18,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import logica.ssusuarios.Jugador;
 import logica.ssjuegos.poker.EventoManoPoker;
 import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
 import logica.ssjuegos.poker.EventoPartidaPoker;
 import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
 import logica.ssjuegos.poker.PartidaPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
+import logica.ssusuarios.Jugador;
 
 /**
  *
@@ -339,7 +337,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         panelEsperando.setVisible(false);
     }
 
-    private void mostrarPanelEsperando(String nuevoMensaje) {
+    public void mostrarPanelEsperando(String nuevoMensaje) {
         setVisible(true);
 
         panelEsperando.setVisible(true);
@@ -547,8 +545,12 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         this.remove(panelEsperando);
 
         setLayout(new BorderLayout());
-        add(new PanelFinPartida(framePoker, partida, ganador, ganador), BorderLayout.CENTER);
 
+        if (ganador == null) {
+            add(new PanelFinPartida(framePoker, partida), BorderLayout.CENTER);
+        } else {
+            add(new PanelFinPartida(framePoker, partida, ganador), BorderLayout.CENTER);
+        }
         validate();
         repaint();
 

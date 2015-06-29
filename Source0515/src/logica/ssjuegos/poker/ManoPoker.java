@@ -8,9 +8,6 @@ package logica.ssjuegos.poker;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import logica.ssusuarios.JugadorV1;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
 import logica.ssusuarios.Jugador;
 
@@ -20,16 +17,6 @@ import logica.ssusuarios.Jugador;
  */
 public interface ManoPoker extends Remote {
 
-    void aceptarApuesta(Jugador jugador) throws Exception, RemoteException;
-
-    // <editor-fold defaultstate="collapsed" desc="METODOS APUESTA">
-    void apostar(Jugador jugador, double montoApostado) throws Exception, RemoteException;
-
-    /*
-     * descarta las cartas que recibe
-     * y devuelve cartas nuevas
-     */
-    List<CartaPoker> descartarse(Jugador j, List<CartaPoker> cartasDescartadas) throws Exception, RemoteException;
 
     Apuesta getApuesta() throws RemoteException;
 
@@ -42,16 +29,12 @@ public interface ManoPoker extends Remote {
 
     FiguraPoker getFiguraRealizada(Jugador j) throws RemoteException;
 
-    Map.Entry<Jugador, FiguraPoker> getGanadorYFigura() throws RemoteException;
-
     double getPozo() throws RemoteException;
 
     boolean isComenzada() throws RemoteException;
 
     boolean isFinalizada() throws RemoteException;
 
-    void pasar(Jugador jugador) throws RemoteException;
 
-    void pasarApuesta(Jugador jugador) throws RemoteException;
 
 }
