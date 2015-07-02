@@ -153,6 +153,10 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
         lblSegundos.setText("-");
     }
 
+    void setTimeout(int timeout) {
+        this.hasta = timeout;
+    }
+
     public interface TareaTimer {
 
         public void finalizoTimer();

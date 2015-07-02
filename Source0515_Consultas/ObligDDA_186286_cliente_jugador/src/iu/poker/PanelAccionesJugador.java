@@ -72,6 +72,14 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
         this.showTimer = showTimer;
     }
 
+    public void setShowTimer(int timeout) {
+        panelTimer.setVisible(timeout > -1);
+        this.showTimer = timeout > -1;
+        if (timeout > -1) {
+            panelTimer.setTimeout(timeout);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -523,17 +531,17 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
     }
 
     public void cancelar() {
-        System.out.println("cancelar");
+        System.out.println("cancelar panel acciones jugador ");
         panelTimer.cancelar();
     }
 
     public void resetear() {
-        System.out.println("resetear");
+        System.out.println("resetear panel acciones jugador ");
         panelTimer.resetear();
     }
 
     protected void comenzar() {
-        System.out.println("comenzar");
+        System.out.println("comenzar panel acciones jugador ");
         panelTimer.comenzar();
     }
 
@@ -605,14 +613,15 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
     }
 
     void deshabilitarTimer() {
-        System.out.println("deshabilitar");
+        System.out.println("deshabilitar panel acciones jugador ");
         panelTimer.deshabilitarTimer();
     }
 
     @Override
     public void finalizoTimer() {
         if (showTimer) {
-            mostrarPanelEsperando("TIMEOUT, queda fuera de la partida");
+            //TODO
+//mostrarPanelEsperando("TIMEOUT, queda fuera de la partida");
         }
         //framePoker.continuarEnJuego(false);
     }

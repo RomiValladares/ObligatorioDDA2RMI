@@ -6,6 +6,7 @@
 package iu.poker;
 
 import iu.FrameJuegoCasino;
+import iu.poker.ControladorFramePoker.ControladorFramePokerEnum;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
-            actualizarUI();
+            controlador.ready();
         } catch (Exception ex) {
             Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, null, ex);
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -53,31 +54,31 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     }
 
-    private synchronized void actualizarUI() {
+    private void actualizarUI() {
         try {
             //los paneles deberian actualizarse solos
             //panelDatosPartida1.actualizarUI();
             panelAccionesJugador.setDialogVisible(false);
 
-            if (controlador.partidaComenzada()) {
-                panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaximaManoActual());
-                panelEsperandoInicio.setVisible(false);
-                panelJuegoPoker1.setVisible(true);
-                panelAccionesJugador.setVisible(true);
+            if (controlador != null) {
+                if (controlador.partidaComenzada()) {
+                    panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaximaManoActual());
 
-                if (!ingresoAPartida) {
-                    panelAccionesJugador.setShowTimer(controlador.partidaCronometrada());
-                    
-                    actualizarCartas();
-                    ingresoAPartida = true;
+                    if (!ingresoAPartida) {
+                        System.out.println("FramePoker.ActualizarUI !ingresoAPartida");
+                        panelAccionesJugador.setShowTimer(controlador.partidaCronometrada());
+
+                        //actualizarCartas();
+                        ingresoAPartida = true;
+                    }
+                } else {
+                    panelAccionesJugador.setVisible(false);
+
+                    panelJuegoPoker1.setVisible(false);
+                    panelEsperandoInicio.setVisible(true);
+                    lblJugadoresRestantes.setText(controlador.getCantidadMaxJugadores()
+                            - controlador.getSizeJugadoresPartida() + "");
                 }
-            } else {
-                panelAccionesJugador.setVisible(false);
-
-                panelJuegoPoker1.setVisible(false);
-                panelEsperandoInicio.setVisible(true);
-                lblJugadoresRestantes.setText(controlador.getCantidadMaxJugadores()
-                        - controlador.getSizeJugadoresPartida() + "");
             }
         } catch (Exception ex) {
             //Logger.getLogger(FramePoker.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,7 +206,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        controlador.ready();
+
     }//GEN-LAST:event_formWindowClosing
 
     protected void setModoDescartarse(boolean set) {
@@ -236,7 +237,9 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         //TODO revisar que comentar esto no cree bugs
         //if (o.getClass().equals(PartidaPoker.class)) {
         panelDatosJugador1.actualizar();
-        if (arg instanceof EventoManoPoker) {
+        if (arg instanceof ControladorFramePokerEnum) {
+            actualizarUI();
+        } else if (arg instanceof EventoManoPoker) {
             EventoManoPoker evento = (EventoManoPoker) arg;
             actualizar(evento);
         } else if (arg instanceof EventoPartidaPoker) {
@@ -339,7 +342,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                     panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
 //lo hago en el actualizarCartas, por el bug de que la ultima ventana no recibe el COMENZO_MANO
 //                    panelAccionesJugador.resetear();
-                    actualizarCartas();
+                    mostrarCartas();
                     break;
                 case NUEVA_APUESTA:
                     if (controlador.jugadorAposto()) {
@@ -382,6 +385,13 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         }
     }
 
+    private void mostrarCartas() {
+        panelEsperandoInicio.setVisible(false);
+        panelJuegoPoker1.setVisible(true);
+        panelAccionesJugador.setVisible(true);
+        actualizarCartas();
+    }
+
     private void actualizarCartas() {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, null, "actualizarCartas para " + getJugador());
         try {
@@ -393,11 +403,10 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     private void mostrarDialogoFinPartida(EventoPartidaPoker evento) {
+        System.out.println("FramePoker mostrarDialogoFinPartida evento=" + evento);
         try {
-            if (!evento.getEvento().equals(EventosPartidaPoker.TIMEOUT_JUGADOR)) {
+            if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {
                 panelAccionesJugador.mostrarDialogFinPartida(controlador.getPartida(), controlador.getGanadorPartida(), getJugador());
-            } else {
-                panelAccionesJugador.mostrarDialogFinPartida(controlador.getPartida(), null, getJugador());
             }
         } catch (Exception ex) {
             Logger.getLogger(FramePoker.class.getName()).log(Level.SEVERE, null, ex);
@@ -419,7 +428,8 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         try {
 //            partida.getManoActual().aceptarApuesta(getJugador());
             controlador.aceptarApuesta();
-            mostrarPanelApuesta();
+            panelAccionesJugador.deshabilitarTimer();
+            panelAccionesJugador.mostrarPanelEsperando(null);
 //            setModoDescartarse(true);
         } catch (Exception ex) {
             Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, null, ex);
@@ -429,6 +439,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     void pasarApuesta() {
         controlador.pasarApuesta();
+        panelAccionesJugador.deshabilitarTimer();
     }
 
     void continuarEnJuego(boolean continuar) {
@@ -458,6 +469,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     void pasar() {
         controlador.pasar();
+        panelAccionesJugador.deshabilitarTimer();
     }
 
     boolean puedeSeguirEnJuego() {

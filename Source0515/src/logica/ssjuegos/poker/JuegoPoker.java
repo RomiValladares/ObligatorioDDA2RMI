@@ -8,6 +8,7 @@ import logica.ssjuegos.JuegoCasinoV1;
 import logica.ssusuarios.Jugador;
 import logica.ssjuegos.PartidaJuegoCasino;
 import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
+import static logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker.COMENZO_PARTIDA;
 import observableremoto.ObservableRemoto;
 import observableremoto.ObservadorRemoto;
 
@@ -123,15 +124,16 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
 
     @Override
     public void actualizar(ObservableRemoto origen, Object args) throws RemoteException {
+        System.out.println("JuegoPoker update args=" + args);
         if (args instanceof EventosJuegoCasino) {
             EventosJuegoCasino evento = (EventosJuegoCasino) args;
             if (evento == EventosJuegoCasino.NUEVA_GANANCIA) {
                 actualizarGanancias();
                 notificar(evento);
             }
-        } else if (args instanceof EventoManoPoker) {
-            EventoManoPoker evento = (EventoManoPoker) args;
-            if (evento.getEvento() != null && (evento.getEvento().equals(EventosManoPoker.COMENZO_MANO) && getPartidas().contains(getProximaPartida()))) {
+        } else if (args instanceof EventoPartidaPoker.EventosPartidaPoker) {
+            EventoPartidaPoker.EventosPartidaPoker evento = (EventoPartidaPoker.EventosPartidaPoker) args;
+            if (evento.equals(COMENZO_PARTIDA)) {
                 crearPartida();
             }
         } else {

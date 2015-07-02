@@ -7,6 +7,7 @@ package iu.poker;
 
 import iu.ControladorFrameJuegos;
 import iu.FrameJuegos;
+import static iu.poker.ControladorFramePoker.ControladorFramePokerEnum.READY;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +48,13 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
         //la partida la recibe por callback en setPartida (abajo)
         System.out.println("ControladorFramePoker.JUGAR");
         this.partida = (PartidaPoker) juego.jugar(jugador, this);
+        actualizar(null, READY);
     }
 
     boolean partidaComenzada() {
         try {
             System.out.println("ControladorFramePoker.partidaComenzada");
-            return partida.isComenzada();
+            return partida != null ? partida.isComenzada() : false;
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -361,13 +363,17 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
         }
     }
 
-    boolean partidaCronometrada() {
+    int partidaCronometrada() {
         try {
-            return partida.isCronometrada();
+            return partida.getTimer() / 1000;
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            return -1;
         }
     }
 
+    public enum ControladorFramePokerEnum {
+
+        READY
+    }
 }

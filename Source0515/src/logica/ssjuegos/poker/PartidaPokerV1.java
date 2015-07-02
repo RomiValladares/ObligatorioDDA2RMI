@@ -55,6 +55,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
                 //agrego ese chequeo para un caso en especial
                 //la mano no termino pero si la partida
                 //cuando los jugadores se retiran y queda uno que aposto
+                System.out.println("PartidaPoker quitarJugador manoActual.retirarse");
                 manoActual.retirarse(jugador);
             }
         }
@@ -75,11 +76,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             } else {
                 setGanador(manoActual.getGanadorYFigura().getKey());
             }
-            try {
-                getGanador().agregarSaldo(manoActual.getPozo());
-            } catch (RemoteException ex) {
-                Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            agregarSaldo(getGanador(), manoActual.getPozo());
+
             notificar(new EventoPartidaPoker(EventosPartidaPoker.FINALIZO_PARTIDA, "Finalizo la partida. Ganador: " + getGanador(), getGanador()));
         } else {
             notificar(new EventoPartidaPoker(EventosPartidaPoker.FINALIZO_PARTIDA, "Finalizo la partida sin ganador.", null));
@@ -148,11 +146,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     private void restarGanancias(Jugador jugador) {
         double diezPorcientoGanancias = (10 * getJugadores().get(jugador)) / 100;
         if (diezPorcientoGanancias > 0) {
-            try {
-                jugador.restarSaldo(diezPorcientoGanancias);
-            } catch (RemoteException ex) {
-                Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            descontarSaldo(jugador, diezPorcientoGanancias);
             setGanancias(getGanancias() + diezPorcientoGanancias);
             notificar(EventosJuegoCasino.NUEVA_GANANCIA);
         }
@@ -204,16 +198,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     private void descontarSaldo() {
         for (Map.Entry<Jugador, Double> entrySet : getJugadores().entrySet()) {
-            try {
-                entrySet.getKey().restarSaldo(apuestaBase);
-            } catch (RemoteException ex) {
-                Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            descontarSaldo(entrySet.getKey(), apuestaBase);
         }
-    }
-    
-    private void descontarSaldo(Jugador j, double monto){
-    j.restarSaldo(monto);
     }
 
     private void nuevaMano(double pozoAcumulado) {
@@ -335,8 +321,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     // </editor-fold> 
     @Override
     protected void timeout(ArrayList<Jugador> jugadoresTimeout) {
-        System.out.println("TERMINO TIMEOUT");
         if (isCronometrada()) {
+            System.out.println("TERMINO TIMEOUT");
             ArrayList<Jugador> jugadoresTimeout1 = new ArrayList<>(jugadoresTimeout);
             for (Jugador j : jugadoresTimeout1) {
                 if (this.getJugadores().containsKey(j)) {
@@ -352,6 +338,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
             //aca llega solo si no hubo excepcion
             //esto es para cuando un jugador elija retirarse sin que haya empezado la partida
+            System.out.println("Partida.Timeout getJugadores().size()=" + getJugadores().size());
+
             if (isComenzada() && getJugadores().size() <= 1 && !isFinalizada()) {
                 finalizarPartida();
             }

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import logica.ssjuegos.JuegoCasinoV1.EventosJuegoCasino;
+import logica.ssusuarios.Jugador;
+import logica.ssusuarios.JugadorV1;
+import logica.ssusuarios.SsUsuarios;
 
 //Observer porque observa los juegos para saber cuando se produce una nueva ganancia
 // y a ServiciosJuego para enterarse cuando cambia el ultimo numero partida
@@ -50,6 +53,7 @@ public class SsJuegos extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("SsJuegos update arg=" + arg);
         if (arg instanceof EventosJuegoCasino) {
             actualizarGanancias();
         }
@@ -102,5 +106,10 @@ public class SsJuegos extends Observable implements Observer {
 
     protected void modificar(DatosPartidaJuegoCasino p) {
         servicios.modificar(p);
+    }
+
+    public void guardar(JugadorV1 j) {
+//TODO        
+//SsUsuarios.getInstancia().guardar(j);
     }
 }

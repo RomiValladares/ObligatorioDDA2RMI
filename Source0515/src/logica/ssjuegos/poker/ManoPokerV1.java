@@ -107,6 +107,8 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         } else if (!jugadores.remove(jugador)) {
             throw new Exception("El jugador no esta en esta partida.");
         }
+        System.out.println("ManoPoker retirarse jugadores.size()=" + jugadores.size());
+        checkDescartarCartas();
     }
 
     public void pasar(Jugador jugador) {
@@ -154,23 +156,23 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         this.montoApostado += apuesta.getMontoApostado();
         notificar(new EventoManoPoker(null, jugador.getEtiqueta() + " acepta la apuesta."));
 
-        if (apuesta.getJugadores().size() + 1 == jugadores.size()) {
-            notificar(new EventoManoPoker(EventosManoPoker.DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));
-        }
+        checkDescartarCartas();
     }
 
     public void pasarApuesta(Jugador jugador) {
-        jugadores.remove(jugador);
-        cartasJugadores.remove(jugador);
+        if (jugadores.remove(jugador)) {
+            cartasJugadores.remove(jugador);
 
-        String nJugador = null;
-        try {
-            nJugador = jugador.getEtiqueta();
-        } catch (RemoteException ex) {
-            Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+            String nJugador = null;
+            try {
+                nJugador = jugador.getEtiqueta();
+            } catch (RemoteException ex) {
+                Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            notificar(new EventoManoPoker(null, nJugador + " queda fuera."));
+
+            checkDescartarCartas();
         }
-        notificar(new EventoManoPoker(null, nJugador + " queda fuera."));
-        checkTerminarApuesta();
     }
 
     @Override
@@ -204,7 +206,16 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         pozo += jugadores.size() * apuestaBase;
     }
 
+    private void checkDescartarCartas() {
+        if (apuesta != null) {
+            if (apuesta.getJugadores().size() + 1 == jugadores.size()) {
+                notificar(new EventoManoPoker(EventosManoPoker.DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));
+            }
+        }
+    }
+
     private void checkTerminarApuesta() {
+        System.out.println("ManoPoker CheckTerminarApuesta. jugadores.size()=" + jugadores.size() + " apuesta.getJugadores.size()=" + apuesta.getJugadores().size());
         if (jugadores.size() == 1 || (apuesta.getJugadores().size() + 1 == jugadores.size() && apuesta.todosDescartaron())) {
             if (apuesta.getJugadores().isEmpty()) {
                 //significa que solo uno aposto, por lo tanto gana

@@ -6,13 +6,9 @@
 package logica.ssusuarios;
 
 import Persistencia.ManejadorBD;
-import Persistencia.Persistente;
 import Persistencia.persistentes.JugadorPersistente;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,17 +16,17 @@ import java.util.logging.Logger;
  */
 public class ServiciosUsuarioV1 {
 
-    private HashMap<String, Usuario> usuariosRegistrados = new HashMap<>();
+    private HashMap<String, UsuarioV1> usuariosRegistrados = new HashMap<>();
     private ManejadorBD manejador = ManejadorBD.getInstancia();
     private final String stringConexion = "jdbc:mysql://localhost/casino?user=root&password=root";
 
-    public HashMap<String, Usuario> getUsuarios() {
+    public HashMap<String, UsuarioV1> getUsuarios() {
         JugadorPersistente persistente = new JugadorPersistente(null);
 
         manejador.conectar(stringConexion);
-        ArrayList<Usuario> jugadoresDB = manejador.obtenerTodos(persistente);
+        ArrayList<UsuarioV1> jugadoresDB = manejador.obtenerTodos(persistente);
 
-        for (Usuario j : jugadoresDB) {
+        for (UsuarioV1 j : jugadoresDB) {
             usuariosRegistrados.put(j.getNombre(), j);
         }
 
@@ -82,7 +78,7 @@ public class ServiciosUsuarioV1 {
         return usuariosRegistrados;
     }
 
-    void guardar(Jugador u) {
+    void guardar(JugadorV1 u) {
         JugadorPersistente p = new JugadorPersistente(u);
 
         manejador.conectar(stringConexion);

@@ -7,7 +7,6 @@ package iu.consultas;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -55,11 +54,10 @@ public class TablaPartidas extends javax.swing.JPanel {
         panelAbajo.setVisible(true);
         listaParticipantes.setListData(new ArrayList<>(seleccionada.getJugadores().keySet()).toArray());
         listaParticipantes.setCellRenderer(new RendererCelda());
+        lblGanador.setText("-");
         try {
             if (seleccionada.getGanador() != null) {
                 lblGanador.setText(seleccionada.getGanador().getNombre());
-            } else {
-                lblGanador.setText("-");
             }
         } catch (Exception ex) {
             Logger.getLogger(TablaPartidas.class.getName()).log(Level.SEVERE, null, ex);
