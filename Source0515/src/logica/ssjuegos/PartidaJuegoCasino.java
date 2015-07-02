@@ -29,4 +29,6 @@ public interface PartidaJuegoCasino extends ObservableRemoto {
 
     public boolean isFinalizada() throws RemoteException;
 
+    public boolean isCronometrada() throws RemoteException;
+
 }

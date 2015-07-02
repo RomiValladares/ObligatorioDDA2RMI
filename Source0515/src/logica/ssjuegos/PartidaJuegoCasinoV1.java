@@ -211,8 +211,20 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
         }
     }
 
+    @Override
     public boolean isCronometrada() {
         return cronometrada;
+    }
+
+    /**
+     *
+     * @return -1 si no es cronometrada, tiempo en segs si lo es
+     */
+    public int getTimer() throws RemoteException {
+        if (cronometrada) {
+            return tiempoTimer;
+        }
+        return -1;
     }
 
     /**

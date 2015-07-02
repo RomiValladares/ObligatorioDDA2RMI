@@ -5,7 +5,7 @@
  */
 package logica.ssjuegos;
 
-import logica.ssusuarios.JugadorV1;
+import logica.ssusuarios.Jugador;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Observable;
@@ -37,7 +37,7 @@ public interface JuegoCasino extends Remote {
     /*
      * Agrega un jugador a la partida que corresponda
      */
-    PartidaJuegoCasino jugar(Jugador nuevoJugador, ObservadorRemoto obs) throws RemoteException, Exception;
+    //PartidaJuegoCasino jugar(Jugador nuevoJugador) throws RemoteException, Exception;
 
     /*
      * validacion previa para ingresar al juego
@@ -45,5 +45,7 @@ public interface JuegoCasino extends Remote {
     boolean puedeJugar(Jugador nuevoJugador) throws RemoteException, Exception;
 
     boolean tienePartidasActivas() throws RemoteException;
+
+    public PartidaJuegoCasino jugar(Jugador jugador, ObservadorRemoto obs) throws RemoteException, Exception;
 
 }

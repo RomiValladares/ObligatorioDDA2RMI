@@ -51,4 +51,7 @@ public interface PartidaPoker extends PartidaJuegoCasino {
 
     public boolean jugadorAceptoApuesta(Jugador j) throws RemoteException;
 
+    public int getTimer() throws RemoteException;
+
+    public void ready(Jugador j) throws RemoteException;
 }

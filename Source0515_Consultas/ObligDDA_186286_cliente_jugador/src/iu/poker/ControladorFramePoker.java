@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logica.ssjuegos.JuegoCasino;
@@ -36,19 +37,28 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
     private PartidaPoker partida;
     private Jugador jugador;
     private DatosUsuario datos;
+    private boolean avisoReady = false;
 
-    ControladorFramePoker(JuegoCasino juego, Jugador jugador) throws RemoteException, Exception {
+    ControladorFramePoker(JuegoCasino juego, Jugador jugador, Observer aThis) throws RemoteException, Exception {
         setJugador(jugador);
+        if (aThis != null) {
+            addObserver(aThis);
+        }
+        //la partida la recibe por callback en setPartida (abajo)
+        System.out.println("ControladorFramePoker.JUGAR");
         this.partida = (PartidaPoker) juego.jugar(jugador, this);
     }
 
     boolean partidaComenzada() {
         try {
+            System.out.println("ControladorFramePoker.partidaComenzada");
             return partida.isComenzada();
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return false;
     }
 
     Map.Entry<Jugador, FiguraPoker> getGanadorManoActual() {
@@ -56,8 +66,11 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
             return partida.getGanadorYFiguraManoActual();
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return null;
     }
 
     void retirarse() throws Exception {
@@ -65,6 +78,8 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
             partida.retirarse(getJugador());
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -82,8 +97,11 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
             return partida.getJugadoresPartida();
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return null;
     }
 
     public int getNumeroPartida() {
@@ -91,8 +109,11 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
             return partida.getNumeroPartida();
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
-            return -1;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return -1;
     }
 
     void salir() {
@@ -157,6 +178,20 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
 
             return false;
         }
+    }
+
+    /**
+     *
+     * @return -1 si no es cronometrada, x si lo es
+     */
+    protected int getPartidaTimer() {
+        try {
+            //porque son milisegundos
+            return partida.getTimer() / 1000;
+        } catch (RemoteException ex) {
+            Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
     public List<CartaPoker> getCartasJugador() throws Exception {
@@ -293,13 +328,42 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
             return jugador.getSaldo();
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
-            return -1;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return -1;
     }
 
     boolean jugadorAceptoApuesta() {
         try {
             return partida.jugadorAceptoApuesta(jugador);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public void setPartida(PartidaPoker p) throws RemoteException {
+        System.out.println("ControladorFramePoker.setPartida");
+        this.partida = p;
+    }
+
+    void ready() {
+        try {
+            if (!avisoReady) {
+                System.out.println("ready frame");
+                partida.ready(getJugador());
+                avisoReady = true;
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    boolean partidaCronometrada() {
+        try {
+            return partida.isCronometrada();
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
             return false;

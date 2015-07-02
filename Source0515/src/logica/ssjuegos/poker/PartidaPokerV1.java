@@ -27,6 +27,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     private int cantidadMaxJugadores = 4;
     private double apuestaBase = 50;
     private boolean primeraMano;
+    private int ready = 0;
 
     @Override
     public void retirarse(Jugador jugador) throws Exception {
@@ -146,13 +147,15 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     private void restarGanancias(Jugador jugador) {
         double diezPorcientoGanancias = (10 * getJugadores().get(jugador)) / 100;
-        try {
-            jugador.restarSaldo(diezPorcientoGanancias);
-        } catch (RemoteException ex) {
-            Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+        if (diezPorcientoGanancias > 0) {
+            try {
+                jugador.restarSaldo(diezPorcientoGanancias);
+            } catch (RemoteException ex) {
+                Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            setGanancias(getGanancias() + diezPorcientoGanancias);
+            notificar(EventosJuegoCasino.NUEVA_GANANCIA);
         }
-        setGanancias(getGanancias() + diezPorcientoGanancias);
-        notificar(EventosJuegoCasino.NUEVA_GANANCIA);
     }
 
     public PartidaPokerV1(int numeroPartida) throws RemoteException {
@@ -163,11 +166,17 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         if (puedeJugar(nuevoJugador)) {
             agregar(obs);
             getJugadores().put(nuevoJugador, 0d);
+            notificar();
+        }
+    }
 
-            if (getJugadores().size() == cantidadMaxJugadores) {
+    @Override
+    public void ready(Jugador j) throws RemoteException {
+        if (getJugadores().containsKey(j)) {
+            ready++;
+            System.out.println("getJugadores().size()=" + getJugadores().size() + " ready=" + ready);
+            if (getJugadores().size() == ready && getJugadores().size() == cantidadMaxJugadores) {
                 comenzar();
-            } else {
-                notificar();
             }
         }
     }
@@ -201,6 +210,10 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
                 Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    private void descontarSaldo(Jugador j, double monto){
+    j.restarSaldo(monto);
     }
 
     private void nuevaMano(double pozoAcumulado) {
@@ -322,7 +335,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     // </editor-fold> 
     @Override
     protected void timeout(ArrayList<Jugador> jugadoresTimeout) {
-        System.out.println("timeout");
+        System.out.println("TERMINO TIMEOUT");
         if (isCronometrada()) {
             ArrayList<Jugador> jugadoresTimeout1 = new ArrayList<>(jugadoresTimeout);
             for (Jugador j : jugadoresTimeout1) {
@@ -349,4 +362,11 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     public boolean jugadorAceptoApuesta(Jugador j) throws RemoteException {
         return manoActual.jugadorAceptoApuesta(j);
     }
+
+    @Override
+    protected void empezarTimer() {
+        super.empezarTimer(); //To change body of generated methods, choose Tools | Templates.
+        notificar(EventosPartidaPoker.COMENZO_TIMER);
+    }
+
 }

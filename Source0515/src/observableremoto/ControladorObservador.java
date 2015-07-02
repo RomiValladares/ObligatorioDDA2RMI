@@ -54,9 +54,12 @@ public class ControladorObservador extends UnicastRemoteObject
     }
 
     @Override
-    public synchronized void actualizar(ObservableRemoto origen, Object param) throws RemoteException {
-        System.out.println("ControladorObservador.actualizar " + param);
-        observableLocal.avisar(param);
+    public void actualizar(ObservableRemoto origen, Object param) throws RemoteException {
+        try {
+            observableLocal.avisar(param);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void addObserver(Observer o) {

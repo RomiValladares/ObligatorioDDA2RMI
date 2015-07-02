@@ -30,13 +30,20 @@ import logica.ssusuarios.Jugador;
  *
  * @author Romi
  */
-public class PanelAccionesJugador extends javax.swing.JPanel {
+public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTimer.TareaTimer {
 
+    private int segundosHasta = 10;
     private FramePoker framePoker;
     private BufferedImage image;
+    private boolean showTimer;
 
     public PanelAccionesJugador() {
         initComponents();
+    }
+
+    public PanelAccionesJugador(boolean showTimer) {
+        this();
+        setShowTimer(showTimer);
     }
 
     /**
@@ -45,7 +52,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
      * @param parent con la cual se va a comunicar
      */
     public PanelAccionesJugador(FramePoker parent) {
-        initComponents();
+        this(false);
         this.framePoker = parent;
 
         try {
@@ -53,6 +60,16 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(PanelAccionesJugador.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public PanelAccionesJugador(FramePoker parent, boolean showTimer) {
+        this(parent);
+        setShowTimer(showTimer);
+    }
+
+    public void setShowTimer(boolean showTimer) {
+        panelTimer.setVisible(showTimer);
+        this.showTimer = showTimer;
     }
 
     /**
@@ -82,6 +99,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         txtDialog = new javax.swing.JLabel();
         btnOKDialog = new javax.swing.JButton();
         btnNoDialog = new javax.swing.JButton();
+        panelTimer = new iu.poker.PanelTimer(this, segundosHasta);
 
         setMaximumSize(new java.awt.Dimension(540, 175));
         setMinimumSize(new java.awt.Dimension(540, 175));
@@ -269,17 +287,21 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(panelDialog, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
-                    .addComponent(panelEsperando, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
-                    .addComponent(panelApuesta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
-                    .addComponent(panelAceptarApuesta, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(panelDialog, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                        .addComponent(panelEsperando, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                        .addComponent(panelApuesta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                        .addComponent(panelAceptarApuesta, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(panelTimer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelApuesta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelAceptarApuesta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -287,7 +309,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
                 .addComponent(panelEsperando, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -500,6 +522,22 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         }
     }
 
+    public void cancelar() {
+        System.out.println("cancelar");
+        panelTimer.cancelar();
+    }
+
+    public void resetear() {
+        System.out.println("resetear");
+        panelTimer.resetear();
+    }
+
+    protected void comenzar() {
+        System.out.println("comenzar");
+        panelTimer.comenzar();
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptarApuesta;
     private javax.swing.JButton btnApostar;
@@ -518,6 +556,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
     private javax.swing.JPanel panelApuesta;
     private javax.swing.JPanel panelDialog;
     private javax.swing.JPanel panelEsperando;
+    private iu.poker.PanelTimer panelTimer;
     private javax.swing.JLabel txtDialog;
     // End of variables declaration//GEN-END:variables
 
@@ -563,5 +602,18 @@ public class PanelAccionesJugador extends javax.swing.JPanel {
         if (image != null) {
             g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         }
+    }
+
+    void deshabilitarTimer() {
+        System.out.println("deshabilitar");
+        panelTimer.deshabilitarTimer();
+    }
+
+    @Override
+    public void finalizoTimer() {
+        if (showTimer) {
+            mostrarPanelEsperando("TIMEOUT, queda fuera de la partida");
+        }
+        //framePoker.continuarEnJuego(false);
     }
 }

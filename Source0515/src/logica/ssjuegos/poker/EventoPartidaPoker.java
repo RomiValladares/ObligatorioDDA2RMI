@@ -16,7 +16,7 @@ public class EventoPartidaPoker implements Serializable {
 
     public enum EventosPartidaPoker {
 
-        COMENZO_PARTIDA, FINALIZO_PARTIDA, JUGADOR_SALDO_INSUFICIENTE, SALIDA_JUGADOR, TIMEOUT_JUGADOR
+        COMENZO_PARTIDA, FINALIZO_PARTIDA, JUGADOR_SALDO_INSUFICIENTE, SALIDA_JUGADOR, TIMEOUT_JUGADOR, COMENZO_TIMER
     }
 
     private EventosPartidaPoker evento;
