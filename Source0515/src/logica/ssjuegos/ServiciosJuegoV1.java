@@ -26,7 +26,8 @@ public class ServiciosJuegoV1 extends Observable {
     private ManejadorBD manejador = ManejadorBD.getInstancia();
 
     public ArrayList<JuegoCasinoV1> getJuegos() {
-        ArrayList<JuegoCasinoV1> juegosCasino = FabricadorJuegosCasino.getJuegosCasino();
+        int timeout = (int) getTimeout();
+        ArrayList<JuegoCasinoV1> juegosCasino = FabricadorJuegosCasino.getJuegosCasino(timeout > -1, timeout);
 
         int ultimoNumeroPartida = getUltimoNumeroPartida();
 
@@ -92,6 +93,14 @@ public class ServiciosJuegoV1 extends Observable {
 
         manejador.conectar(stringConexion);
         manejador.modificar(persistente);
+    }
+
+    private double getTimeout() {
+        ParametrosPersistente persistente = new ParametrosPersistente(new Parametro("timeout", -1));
+
+        manejador.conectar(stringConexion);
+        manejador.leerPersistente(persistente);
+        return ((Parametro) persistente.getObjeto()).getValor();
     }
 
 }

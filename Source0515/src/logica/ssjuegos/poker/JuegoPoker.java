@@ -9,6 +9,7 @@ import logica.ssusuarios.Jugador;
 import logica.ssjuegos.PartidaJuegoCasino;
 import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
 import static logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker.COMENZO_PARTIDA;
+import static logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker.FINALIZO_PARTIDA;
 import observableremoto.ObservableRemoto;
 import observableremoto.ObservadorRemoto;
 
@@ -22,8 +23,8 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
     private static final CodigosJuego codigo = CodigosJuego.POKER;
     private final String etiqueta = "POKER";
 
-    public JuegoPoker() throws RemoteException {
-        //crearPartida();
+    public JuegoPoker(boolean timed, int timeout) throws RemoteException {
+        super(timed, timeout);
     }
 
     /*
@@ -114,7 +115,7 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
                 getPartidas().add(getProximaPartida());
             }
             int ultimoNPartida = getUltimoNumeroPartida();
-            setProximaPartida(new PartidaPokerV1(ultimoNPartida++));
+            setProximaPartida(new PartidaPokerV1(ultimoNPartida++, isTimed(), getTimeout()));
             setUltimoNumeroPartida(ultimoNPartida);
             getProximaPartida().agregar(this);
         } catch (RemoteException ex) {
@@ -124,7 +125,7 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
 
     @Override
     public void actualizar(ObservableRemoto origen, Object args) throws RemoteException {
-        System.out.println("JuegoPoker update args=" + args);
+        //System.out.println("JuegoPoker update args=" + args);
         if (args instanceof EventosJuegoCasino) {
             EventosJuegoCasino evento = (EventosJuegoCasino) args;
             if (evento == EventosJuegoCasino.NUEVA_GANANCIA) {
@@ -134,7 +135,10 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
         } else if (args instanceof EventoPartidaPoker.EventosPartidaPoker) {
             EventoPartidaPoker.EventosPartidaPoker evento = (EventoPartidaPoker.EventosPartidaPoker) args;
             if (evento.equals(COMENZO_PARTIDA)) {
+                notificar(args);
                 crearPartida();
+            } else if (evento.equals(FINALIZO_PARTIDA)) {
+                notificar(args);
             }
         } else if (!(args instanceof EventoManoPoker)) {
             notificar(args);

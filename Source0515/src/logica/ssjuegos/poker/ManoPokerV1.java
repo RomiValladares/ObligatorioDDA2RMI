@@ -104,14 +104,15 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     protected void retirarse(Jugador jugador) throws Exception {
         /*if (!finalizada && apuesta != null && (apuesta.getJugador().equals(jugador) || apuesta.getJugadores().contains(jugador))) {
          throw new Exception("El jugador realizo una apuesta, no puede salir del juego.");
-         } else*/ if (!jugadores.remove(jugador)) {
-            throw new Exception("El jugador no esta en esta partida.");
+         } else*/ if (jugadores.remove(jugador)) {
+            /*    throw new Exception("El jugador no esta en esta partida.");
+             }*/
+            if (apuesta != null) {
+                apuesta.quitar(jugador);
+            }
+            System.out.println("ManoPoker retirarse jugadores.size()=" + jugadores.size());
+            checkTerminarMano();
         }
-        if (apuesta != null) {
-            apuesta.quitar(jugador);
-        }
-        System.out.println("ManoPoker retirarse jugadores.size()=" + jugadores.size());
-        checkTerminarMano();
     }
 
     public void pasar(Jugador jugador) {
@@ -189,7 +190,6 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     @Override
     public double getApuestaMaxima() {
         double saldoMinimo = Double.MAX_VALUE;
-        System.out.println("manopoker getapuestamaxima jugadores " + jugadores.size());
         for (Jugador j : jugadores) {
             /**
              * TODO este try catch is re what spanglish
@@ -228,7 +228,8 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
             //lo agrego porque puede ser que el que aposto se haya retirado
             int jugadorQueAposto = apuesta.getJugador() != null ? 1 : 0;
             System.out.println("DEBUG MANO checkTerminarMano apuesta.getJugadores().size()+jugadorQueAposto=" + (apuesta.getJugadores().size() + jugadorQueAposto));
-            if (apuesta.getJugadores().size() + jugadorQueAposto == jugadores.size()) {
+            if (apuesta.getJugadores().size() + jugadorQueAposto == jugadores.size() && !apuesta.isModoDescartar()) {
+                apuesta.setModoDescartar(true);
                 notificar(new EventoManoPoker(EventosManoPoker.DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));
             } else if (apuesta.getJugadores().isEmpty()) {
                 System.out.println("DEBUG MANO checkDescartarCartas llama a checkTerminarApuesta");

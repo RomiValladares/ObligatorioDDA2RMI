@@ -23,6 +23,8 @@ public class Apuesta implements Serializable {
     private ArrayList<Jugador> jugadores;
 
     private int jugadoresDescartados = 0;
+    //indica si ya se comenzo a descartar
+    private boolean modoDescartar;
 
     public Apuesta(Jugador apostador, double montoApostado) {
         this.apostador = apostador;
@@ -89,6 +91,14 @@ public class Apuesta implements Serializable {
         } else {
             jugadores.remove(jugador);
         }
+    }
+
+    void setModoDescartar(boolean b) {
+        this.modoDescartar = b;
+    }
+
+    public boolean isModoDescartar() {
+        return modoDescartar;
     }
 
 }

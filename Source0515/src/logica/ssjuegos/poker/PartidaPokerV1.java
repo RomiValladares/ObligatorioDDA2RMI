@@ -46,16 +46,13 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         }
     }
 
-    @Override
     protected void quitarJugador(Jugador jugador) throws Exception {
-        super.quitarJugador(jugador);
         //if (getJugadores().containsKey(jugador)) {
         if (manoActual != null && !manoActual.isFinalizada()) {
             if (!isFinalizada()) {
                 //agrego ese chequeo para un caso en especial
                 //la mano no termino pero si la partida
                 //cuando los jugadores se retiran y queda uno que aposto
-                System.out.println("PartidaPoker quitarJugador manoActual.retirarse");
                 manoActual.retirarse(jugador);
             }
         }
@@ -90,6 +87,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     public void update(Observable o, Object arg) {
         //TODO verificar que comentar esto no cree bugs
         //if (o.getClass().equals(ManoPoker.class)) {
+        debug("update " + arg);
         if (arg instanceof EventoManoPoker && ((EventoManoPoker) arg).getEvento() != null) {
             EventoManoPoker ev = (EventoManoPoker) arg;
             if (ev.getEvento().equals(EventoManoPoker.EventosManoPoker.COMENZO_MANO) && primeraMano) {
@@ -155,7 +153,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         }
     }
 
-    public PartidaPokerV1(int numeroPartida) throws RemoteException {
+    public PartidaPokerV1(int numeroPartida, boolean timed, int timeout) throws RemoteException {
+        super(timed, timeout);
         setNumeroPartida(numeroPartida);
     }
 
@@ -171,7 +170,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     public void ready(Jugador j) throws RemoteException {
         if (getJugadores().containsKey(j)) {
             ready++;
-            System.out.println("getJugadores().size()=" + getJugadores().size() + " ready=" + ready);
+
             if (getJugadores().size() == ready && getJugadores().size() == cantidadMaxJugadores) {
                 comenzar();
             }
@@ -198,7 +197,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
                 nuevaMano(manoActual.getPozo());
             }
         }
-        
+
         nuevaMano(pozoAcumulado);
 
         //si no ya avisa la nueva mano
@@ -293,22 +292,28 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     public void pasar(Jugador jugador) {
         setJugadorActivo(jugador);
         manoActual.pasar(jugador);
+        try {
+            debug(jugador.getEtiqueta() + " pasa");
+        } catch (RemoteException ex) {
+            Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void apostar(Jugador jugador, double montoApostado) throws Exception {
         manoActual.apostar(jugador, montoApostado);
-
+        debug(jugador.getEtiqueta() + " apuesta");
         setJugadorActivo(jugador);
         //lama al modificar de la BD, el restar saldo lo hace la mano
         modificar(jugador);
         empezarTimer();
+        setJugadorActivo(jugador);
     }
 
     @Override
     public void aceptarApuesta(Jugador jugador) throws Exception {
         manoActual.aceptarApuesta(jugador);
-
+        debug(jugador.getEtiqueta() + " acepta apuesta");
         setJugadorActivo(jugador);
         //lama al modificar de la BD, el restar saldo lo hace la mano
         modificar(jugador);
@@ -317,6 +322,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     @Override
     public List<CartaPoker> descartarse(Jugador j, List<CartaPoker> cartasDescartadas) throws Exception {
         List<CartaPoker> descartarse = manoActual.descartarse(j, cartasDescartadas);
+        debug(j.getEtiqueta() + " se descarta");
         setJugadorActivo(j);
         return descartarse;
     }
@@ -329,6 +335,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     @Override
     public void pasarApuesta(Jugador jugador) throws RemoteException {
         manoActual.pasarApuesta(jugador);
+        debug(jugador.getEtiqueta() + " pasa apuesta");
         setJugadorActivo(jugador);
     }
 
@@ -336,11 +343,12 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     @Override
     protected void timeout(ArrayList<Jugador> jugadoresTimeout) {
         if (isCronometrada()) {
-            System.out.println("TERMINO TIMEOUT");
+            debug("termino timer con " + jugadoresTimeout.size() + " jugadores");
             ArrayList<Jugador> jugadoresTimeout1 = new ArrayList<>(jugadoresTimeout);
             for (Jugador j : jugadoresTimeout1) {
                 if (this.getJugadores().containsKey(j)) {
                     try {
+                        debug(j.getEtiqueta() + " queda fuera por timeout.");
                         notificar(new EventoPartidaPoker(EventosPartidaPoker.TIMEOUT_JUGADOR, j.getEtiqueta() + " queda fuera por timeout.", j));
                         quitarJugador(j);
                     } catch (Exception ex) {
@@ -352,8 +360,6 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
             //aca llega solo si no hubo excepcion
             //esto es para cuando un jugador elija retirarse sin que haya empezado la partida
-            System.out.println("Partida.Timeout getJugadores().size()=" + getJugadores().size());
-
             if (isComenzada() && getJugadores().size() <= 1 && !isFinalizada()) {
                 finalizarPartida();
             }
@@ -368,7 +374,12 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     @Override
     protected void empezarTimer() {
         super.empezarTimer(); //To change body of generated methods, choose Tools | Templates.
+        debug("comenzo timer");
         notificar(EventosPartidaPoker.COMENZO_TIMER);
     }
 
+    //TODO borrar
+    private void debug(String msj) {
+        System.out.println("DEBUG PARTIDA " + msj);
+    }
 }

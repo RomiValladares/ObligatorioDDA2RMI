@@ -646,4 +646,14 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
         }
         //framePoker.continuarEnJuego(false);
     }
+
+    void setModoDescartarse(boolean b) {
+        if (b) {
+            panelAceptarApuesta.setVisible(!b);
+            panelApuesta.setVisible(!b);
+            panelDialog.setVisible(!b);
+            panelEsperando.setVisible(!b);
+            panelTimer.setVisible(b);
+        }
+    }
 }

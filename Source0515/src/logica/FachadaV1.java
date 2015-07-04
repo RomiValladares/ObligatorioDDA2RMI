@@ -77,7 +77,6 @@ public class FachadaV1 extends ObservableRemotoV1 implements Fachada, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("FachadaV1 update arg=" + arg);
         notificar(arg);
     }
 

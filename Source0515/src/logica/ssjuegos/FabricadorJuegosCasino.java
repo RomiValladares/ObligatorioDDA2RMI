@@ -22,10 +22,10 @@ public class FabricadorJuegosCasino {
         }
     }
 
-    public static ArrayList<JuegoCasinoV1> getJuegosCasino() {
+    public static ArrayList<JuegoCasinoV1> getJuegosCasino(boolean timed, int timeout) {
         ArrayList<JuegoCasinoV1> juegos = new ArrayList<>();
         try {
-            juegos.add(new JuegoPoker());
+            juegos.add(new JuegoPoker(timed, timeout));
         } catch (RemoteException ex) {
             Logger.getLogger(FabricadorJuegosCasino.class.getName()).log(Level.SEVERE, null, ex);
         }

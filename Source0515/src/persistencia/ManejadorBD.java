@@ -95,7 +95,7 @@ public class ManejadorBD {
     public void modificar(Persistente p) {
         ArrayList<String> l = p.getUpdateSql();
         for (String sql : l) {
-            System.out.println("modificar " + sql);
+            //System.out.println("modificar " + sql);
             this.ejecutar(sql);
         }
     }
@@ -155,7 +155,7 @@ public class ManejadorBD {
         ArrayList ret = new ArrayList();
         try {
             String sql = p.getSelectSql();
-            System.out.println(sql);
+            //System.out.println(sql);
             ResultSet rs = this.obtenerResultSet(sql);
             int oidAnt = -1;
             int oid;

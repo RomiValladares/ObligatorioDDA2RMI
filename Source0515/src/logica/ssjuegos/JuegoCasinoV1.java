@@ -27,12 +27,17 @@ public abstract class JuegoCasinoV1 extends UnicastRemoteObject implements Juego
     // partida que esta esperando a ser comenzada
     private PartidaPokerV1 proximaPartida;
 
+    private int timeout;
+    private final boolean timed;
+
     public enum EventosJuegoCasino {
 
         NUEVA_GANANCIA
     }
 
-    protected JuegoCasinoV1() throws RemoteException {
+    protected JuegoCasinoV1(boolean timed, int timeout) throws RemoteException {
+        this.timed = timed;
+        this.timeout = timeout;
     }
 
     protected double getGanancias() {
@@ -77,6 +82,14 @@ public abstract class JuegoCasinoV1 extends UnicastRemoteObject implements Juego
 
     protected void setProximaPartida(PartidaPokerV1 proximaPartida) {
         this.proximaPartida = proximaPartida;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public boolean isTimed() {
+        return timed;
     }
 
     // <editor-fold defaultstate="collapsed" desc="METODOS OBSERVABLE">  

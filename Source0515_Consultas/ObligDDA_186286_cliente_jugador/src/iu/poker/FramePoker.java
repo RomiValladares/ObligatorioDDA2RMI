@@ -34,6 +34,11 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     //chequea que ya haya comenzado la partida
     private boolean ingresoAPartida;
     private ControladorFramePoker controlador;
+    /**
+     * boolean para que cuando el jugador realice una apuesta no comience el
+     * timer con el evento COMENZO_TIMER
+     */
+    private boolean timerDeshabilitado = false;
 
     public FramePoker(JuegoCasino juego, Jugador jugador) {
         setImagenFondo("src/imgs/poker_fondo.jpg");
@@ -215,7 +220,8 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     protected void setModoDescartarse(boolean set) {
         if (set) {
             panelJuegoPoker1.setModoDescartarse(this);
-            panelAccionesJugador.setVisible(false);
+            panelAccionesJugador.setModoDescartarse(false);
+            panelAccionesJugador.resetear();
         } else {
             panelJuegoPoker1.setModoDescartarse(set);
         }
@@ -264,7 +270,10 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                 panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
             }
         } else if (evento.equals(EventosPartidaPoker.COMENZO_TIMER)) {
-            panelAccionesJugador.resetear();
+            if (!timerDeshabilitado) {
+                panelAccionesJugador.resetear();
+            }
+            timerDeshabilitado = false;
         } else {
             panelDatosPartida1.addEvento(evento);
             actualizarUI();
@@ -350,9 +359,12 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                     break;
                 case NUEVA_APUESTA:
                     if (controlador.jugadorAposto()) {
+                        timerDeshabilitado = true;
+                        System.out.println("NUEVA_APUESTA jugadorAposto");
                         panelAccionesJugador.mostrarPanelEsperando("Esperando...");
                         panelAccionesJugador.deshabilitarTimer();
                     } else {
+                        timerDeshabilitado = false;
                         mostrarPanelApuesta();
                     }
                     break;
@@ -448,6 +460,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     void continuarEnJuego(boolean continuar) {
         try {
+            System.out.println("FramePoker continuarEnJuego");
             controlador.continuarEnJuego(continuar);
             if (!continuar) {
                 //se llama en el update, con SALIDA_JUGAODR
@@ -460,6 +473,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     void cerrar() {
+        System.out.println("FramePoker cerrar");
         controlador.salir();
 
         setVisible(false);

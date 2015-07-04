@@ -284,12 +284,9 @@ public class TablaPartidas extends javax.swing.JPanel {
 //            objs[fila][col++] = partidaJuegoCasino.getDuracion();
 //            objs[fila][col++] = partidaJuegoCasino.getTotalApostado();
         }
-        try {
-            tablaPartidas.setModel(new DefaultTableModel(objs, columnasTablaPartidas));
-        } catch (NoSuchElementException ex) {
-            System.out.println("error tablapartidas");
-            ex.printStackTrace();
-        }
+
+        tablaPartidas.setModel(new DefaultTableModel(objs, columnasTablaPartidas));
+
     }
 
     private Object[] armarFila(int cols, String[] datos) {

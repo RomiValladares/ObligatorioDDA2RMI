@@ -35,11 +35,13 @@ public class PartidaJuegoPersistente implements Persistente {
     @Override
     public ArrayList<String> getInsertSql() {
         ArrayList r = new ArrayList();
+        long duracion = u.getDuracionCalculada() / 60000;
+        System.out.println("duracion calculada" + u.getDuracionCalculada());
         r.add("INSERT INTO Partidas(oid,numero,comienzo,final,duracion,total_apostado,codigo_juego)"
                 + " VALUES(" + getOid() + "," + u.getNumeroPartida() + ", '"
                 + formato.format(u.getTiempoInicial()) + "', '"
                 + (u.getTiempoFinal() != null ? formato.format(u.getTiempoFinal()) : null) + "', "
-                + u.getDuracionCalculada() / 60000 + ", " + u.getTotalApostado() + ", " + getCodigoJuego() + ")");
+                + duracion + ", " + u.getTotalApostado() + ", " + getCodigoJuego() + ")");
         //guarda los jugadores solo la primera vez
         if (!u.isFinalizada()) {
             for (Map.Entry<Jugador, Double> entry : u.getJugadores().entrySet()) {
@@ -64,8 +66,9 @@ public class PartidaJuegoPersistente implements Persistente {
     @Override
     public ArrayList<String> getUpdateSql() {
         ArrayList r = new ArrayList();
+        long duracion = u.getDuracionCalculada() / 60000;
         r.add("UPDATE Partidas SET numero=" + u.getNumeroPartida()
-                + ", duracion=" + u.getDuracionCalculada()/ 60000
+                + ", duracion=" + duracion
                 + ", comienzo='" + formato.format(u.getTiempoInicial())
                 + "', final='" + (u.getTiempoFinal() != null ? formato.format(u.getTiempoFinal()) : null)
                 + "', total_apostado=" + u.getTotalApostado() + " WHERE oid=" + getOid());
@@ -118,7 +121,6 @@ public class PartidaJuegoPersistente implements Persistente {
     public void leer(ResultSet rs) throws SQLException {
         u.setOid(rs.getInt("oid"));
         u.setNumero(rs.getInt("numero"));
-        System.out.println("v:" + rs.getInt("duracion"));
         u.setDuracion(rs.getDouble("duracion"));
         u.setTotalApostado(rs.getDouble("total_apostado"));
         try {

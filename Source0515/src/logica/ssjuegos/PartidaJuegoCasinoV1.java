@@ -23,13 +23,12 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
     /**
      * para saber si usa timer o no
      */
-    private boolean cronometrada = false;
+    private boolean cronometrada = true;
     private PartidaTareaTimer timer;
-    private int tiempoTimer = 15000;
+    private int tiempoTimer = 18000;
 
-    public PartidaJuegoCasinoV1() throws RemoteException {
-    }
-
+//    public PartidaJuegoCasinoV1() throws RemoteException {
+//    }
     public PartidaJuegoCasinoV1(boolean timed, int tiempo) throws RemoteException {
         this.cronometrada = timed;
         this.tiempoTimer = tiempo;
@@ -189,16 +188,12 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
 
     protected void setJugadorActivo(Jugador j) {
         if (cronometrada && timer != null) {
+            try {
+                System.out.println("jugador activo " + j.getEtiqueta());
+            } catch (RemoteException ex) {
+                Logger.getLogger(PartidaJuegoCasinoV1.class.getName()).log(Level.SEVERE, null, ex);
+            }
             timer.remove(j);
-        }
-    }
-
-    //el throws exception es porque la partida poker tira excepcion nomas
-    protected void quitarJugador(Jugador j) throws Exception {
-        if (getJugadores().containsKey(j)) {
-            setJugadorActivo(j);
-        } else {
-            throw new Exception("El jugador no esta en esta partida.");
         }
     }
 
