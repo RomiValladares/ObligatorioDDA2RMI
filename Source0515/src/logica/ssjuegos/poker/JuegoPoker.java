@@ -136,8 +136,8 @@ public class JuegoPoker extends JuegoCasinoV1 implements ObservadorRemoto {
             if (evento.equals(COMENZO_PARTIDA)) {
                 crearPartida();
             }
-        } else {
-            notificar(null);
+        } else if (!(args instanceof EventoManoPoker)) {
+            notificar(args);
         }
     }
 

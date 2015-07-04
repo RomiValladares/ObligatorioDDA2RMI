@@ -95,6 +95,7 @@ public class ManejadorBD {
     public void modificar(Persistente p) {
         ArrayList<String> l = p.getUpdateSql();
         for (String sql : l) {
+            System.out.println("modificar " + sql);
             this.ejecutar(sql);
         }
     }

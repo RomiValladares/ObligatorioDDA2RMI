@@ -442,21 +442,25 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
 
             String ganador = null;
             try {
-                ganador = ganadorYFigura.getKey().getEtiqueta();
+                ganador = ganadorYFigura != null ? (ganadorYFigura.getKey() != null ? ganadorYFigura.getKey().getEtiqueta() : null) : null;
             } catch (RemoteException ex) {
                 Logger.getLogger(PanelAccionesJugador.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (ganadorYFigura.getValue() != null) {
-                txtDialog.setText(ganador
-                        + " gana con figura " + ganadorYFigura.getValue());
-            } else if (totalJugadoresApuesta == 1) {
-                txtDialog.setText(ganador
-                        + " gana como unico apostador.");
-            } else {
-                txtDialog.setText(ganador
-                        + " gana sin figura, por carta mas alta.");
-            }
 
+            if (ganador == null) {
+                txtDialog.setText("No hubo ganador.");
+            } else {
+                if (ganadorYFigura.getValue() != null) {
+                    txtDialog.setText(ganador
+                            + " gana con figura " + ganadorYFigura.getValue());
+                } else if (totalJugadoresApuesta == 1) {
+                    txtDialog.setText(ganador
+                            + " gana como unico apostador.");
+                } else {
+                    txtDialog.setText(ganador
+                            + " gana sin figura, por carta mas alta.");
+                }
+            }
             btnOKDialog.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -512,7 +516,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
         }
     }
 
-    private void mostrarPanelDialog(EventosPartidaPoker evento) {
+    protected void mostrarPanelDialog(EventosPartidaPoker evento) {
         if (evento.equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
 
             mostrarPanelDialog();
@@ -528,6 +532,23 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
                 }
             });
         }
+    }
+
+    protected void mostrarPanelDialogTimeout() {
+        mostrarPanelDialog();
+
+        panelEsperando.setVisible(false);
+        framePoker.checkPuedeJugar();
+        txtDialog.setText("Queda fuera de la partida por TIMEOUT.");
+
+        deshabilitarTimer();
+
+        btnOKDialog.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                framePoker.cerrar();
+            }
+        });
     }
 
     public void cancelar() {

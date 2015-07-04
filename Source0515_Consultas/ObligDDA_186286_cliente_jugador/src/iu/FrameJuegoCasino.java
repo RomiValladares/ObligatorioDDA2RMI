@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import logica.ssjuegos.JuegoCasino;
@@ -41,6 +42,7 @@ public abstract class FrameJuegoCasino extends JFrame {
             } else {
                 Logger.getLogger(FrameLogin.class.getName()).log(Level.SEVERE, null, "Background image null");
             }
+            setIconImage(ImageIO.read(new File("src/imgs/frame_icon_j.png")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

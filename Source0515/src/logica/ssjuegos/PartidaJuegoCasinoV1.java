@@ -9,12 +9,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import logica.Timer;
 import logica.ssusuarios.Jugador;
-import logica.ssusuarios.JugadorV1;
 import observableremoto.ObservableRemotoV1;
 
 /**
@@ -28,7 +25,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
      */
     private boolean cronometrada = false;
     private PartidaTareaTimer timer;
-    private int tiempoTimer = 13000;
+    private int tiempoTimer = 15000;
 
     public PartidaJuegoCasinoV1() throws RemoteException {
     }
@@ -49,7 +46,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
 
         obtenerGanador();
 
-        modificar();
+        PartidaJuegoCasinoV1.this.modificar();
     }
 
     protected void comenzar() {
@@ -68,6 +65,10 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
         SsJuegos.getInstancia().guardar(datos);
     }
 
+    protected void modificar(Jugador j) {
+        SsJuegos.getInstancia().modificar(j);
+    }
+
     protected void modificar() {
         SsJuegos.getInstancia().modificar(datos);
     }
@@ -83,7 +84,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
         datos.setNumeroPartida(numeroPartida);
     }
 
-    protected long getDuracion() {
+    protected double getDuracion() {
         return datos.getDuracion();
     }
 
@@ -233,10 +234,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
     protected void descontarSaldo(Jugador j, double monto) {
         try {
             j.restarSaldo(monto);
-            /**
-             * TODO sacar casting
-             */
-            //SsJuegos.getInstancia().guardar(j);
+            modificar(j);
         } catch (RemoteException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
@@ -245,10 +243,7 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
     protected void agregarSaldo(Jugador j, double monto) {
         try {
             j.agregarSaldo(monto);
-            /**
-             * TODO sacar casting
-             */
-            //SsJuegos.getInstancia().guardar((JugadorV1) j);
+            modificar(j);
         } catch (RemoteException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }

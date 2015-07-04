@@ -26,7 +26,7 @@ public class DatosPartidaJuegoCasino implements Serializable {
 
     //para calcular la duracion
     private Date tiempoInicial, tiempoFinal;
-    private long duracion;
+    private double duracion;
     private double totalApostado;
     private boolean comenzada = false;
     private boolean finalizada;
@@ -54,7 +54,7 @@ public class DatosPartidaJuegoCasino implements Serializable {
      * @return duracion desde que empieza hasta que se obtiene el ganador, en
      * segundos
      */
-    public long getDuracion() {
+    public long getDuracionCalculada() {
         if (tiempoInicial == null) {
             return 0;
         }
@@ -62,6 +62,10 @@ public class DatosPartidaJuegoCasino implements Serializable {
             return new Date().getTime() - tiempoInicial.getTime();
         }
         return tiempoFinal.getTime() - tiempoInicial.getTime();
+    }
+
+    public double getDuracion() {
+        return duracion;
     }
 
     public double getTotalApostado() {
@@ -87,7 +91,7 @@ public class DatosPartidaJuegoCasino implements Serializable {
     /*
      * solo para cuando se va a leer desde la bd
      */
-    public void setDuracion(long aLong) {
+    public void setDuracion(double aLong) {
         duracion = aLong;
     }
 

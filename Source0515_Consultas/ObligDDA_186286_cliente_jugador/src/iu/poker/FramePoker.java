@@ -8,12 +8,14 @@ package iu.poker;
 import iu.FrameJuegoCasino;
 import iu.poker.ControladorFramePoker.ControladorFramePokerEnum;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import logica.ssjuegos.JuegoCasino;
 import logica.ssjuegos.poker.CartaPoker;
@@ -35,9 +37,10 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     public FramePoker(JuegoCasino juego, Jugador jugador) {
         setImagenFondo("src/imgs/poker_fondo.jpg");
+
         initComponents();
         setJugador(jugador);
-
+        panelAccionesJugador.setVisible(false);
         try {
             controlador = new ControladorFramePoker(juego, jugador, this);
 
@@ -298,7 +301,8 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoPartidaPoker " + evento);
         if (evento.getEvento().equals(EventosPartidaPoker.TIMEOUT_JUGADOR)) {
             if (evento.getJugador().equals(getJugador())) {
-                mostrarDialogoFinPartida(evento);
+                controlador.desregistrarDePartida();
+                panelAccionesJugador.mostrarPanelDialogTimeout();
             }
         } else if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {

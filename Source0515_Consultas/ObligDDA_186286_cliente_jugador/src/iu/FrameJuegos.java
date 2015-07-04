@@ -10,12 +10,14 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -37,6 +39,11 @@ public class FrameJuegos extends javax.swing.JFrame implements ActionListener, O
     public FrameJuegos(Jugador jugador) {
         initComponents();
 
+        try {
+            setIconImage(ImageIO.read(new File("src/imgs/frame_icon_j.png")));
+        } catch (IOException ex) {
+            Logger.getLogger(FrameJuegos.class.getName()).log(Level.SEVERE, null, ex);
+        }
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         try {

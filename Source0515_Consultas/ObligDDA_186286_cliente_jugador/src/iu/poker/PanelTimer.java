@@ -6,7 +6,6 @@
 package iu.poker;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

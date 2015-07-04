@@ -102,13 +102,16 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     }
 
     protected void retirarse(Jugador jugador) throws Exception {
-        if (!finalizada && apuesta != null && (apuesta.getJugador().equals(jugador) || apuesta.getJugadores().contains(jugador))) {
-            throw new Exception("El jugador realizo una apuesta, no puede salir del juego.");
-        } else if (!jugadores.remove(jugador)) {
+        /*if (!finalizada && apuesta != null && (apuesta.getJugador().equals(jugador) || apuesta.getJugadores().contains(jugador))) {
+         throw new Exception("El jugador realizo una apuesta, no puede salir del juego.");
+         } else*/ if (!jugadores.remove(jugador)) {
             throw new Exception("El jugador no esta en esta partida.");
         }
+        if (apuesta != null) {
+            apuesta.quitar(jugador);
+        }
         System.out.println("ManoPoker retirarse jugadores.size()=" + jugadores.size());
-        checkDescartarCartas();
+        checkTerminarMano();
     }
 
     public void pasar(Jugador jugador) {
@@ -156,7 +159,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         this.montoApostado += apuesta.getMontoApostado();
         notificar(new EventoManoPoker(null, jugador.getEtiqueta() + " acepta la apuesta."));
 
-        checkDescartarCartas();
+        checkTerminarMano();
     }
 
     public void pasarApuesta(Jugador jugador) {
@@ -171,7 +174,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
             }
             notificar(new EventoManoPoker(null, nJugador + " queda fuera."));
 
-            checkDescartarCartas();
+            checkTerminarMano();
         }
     }
 
@@ -206,18 +209,40 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         pozo += jugadores.size() * apuestaBase;
     }
 
+    private void checkTerminarMano() {
+        System.out.println("DEBUG MANO ---checkTerminarMano---:");
+        System.out.println("DEBUG MANO checkTerminarMano jugadores.size()=" + jugadores.size());
+        if (jugadores.size() == 1 || (apuesta != null && apuesta.todosDescartaron())) {
+            System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + apuesta.todosDescartaron());
+            System.out.println("DEBUG MANO checkTerminarMano llama a checkTerminarApuesta");
+            checkTerminarApuesta();
+        } else if (apuesta != null) {
+            System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + apuesta.todosDescartaron());
+            System.out.println("DEBUG MANO checkTerminarMano llama a checkDescartarCartas");
+            checkDescartarCartas();
+        }
+    }
+
     private void checkDescartarCartas() {
         if (apuesta != null) {
-            if (apuesta.getJugadores().size() + 1 == jugadores.size()) {
+            //lo agrego porque puede ser que el que aposto se haya retirado
+            int jugadorQueAposto = apuesta.getJugador() != null ? 1 : 0;
+            System.out.println("DEBUG MANO checkTerminarMano apuesta.getJugadores().size()+jugadorQueAposto=" + (apuesta.getJugadores().size() + jugadorQueAposto));
+            if (apuesta.getJugadores().size() + jugadorQueAposto == jugadores.size()) {
                 notificar(new EventoManoPoker(EventosManoPoker.DESCARTAR_CARTAS, (apuesta.getJugadores().size() + 1) + " jugadores en la apuesta."));
+            } else if (apuesta.getJugadores().isEmpty()) {
+                System.out.println("DEBUG MANO checkDescartarCartas llama a checkTerminarApuesta");
+                checkTerminarApuesta();
             }
         }
     }
 
     private void checkTerminarApuesta() {
-        System.out.println("ManoPoker CheckTerminarApuesta. jugadores.size()=" + jugadores.size() + " apuesta.getJugadores.size()=" + apuesta.getJugadores().size());
-        if (jugadores.size() == 1 || (apuesta.getJugadores().size() + 1 == jugadores.size() && apuesta.todosDescartaron())) {
-            if (apuesta.getJugadores().isEmpty()) {
+        System.out.println("DEBUG MANO CheckTerminarApuesta. jugadores.size()=" + jugadores.size() + " apuesta.getJugadores.size()=" + apuesta.getJugadores().size());
+        //lo agrego porque puede ser que el que aposto se haya retirado
+        int jugadorQueAposto = apuesta.getJugador() != null ? 1 : 0;
+        if (jugadores.size() == 1 || (apuesta.getJugadores().size() + jugadorQueAposto == jugadores.size() && apuesta.todosDescartaron())) {
+            if (apuesta.getJugadores().isEmpty() && apuesta.getJugador() != null) {
                 //significa que solo uno aposto, por lo tanto gana
                 ganadorYFigura = new SimpleEntry<>(apuesta.getJugador(), null);
                 acreditarPozoGanador(apuesta.getJugador());
@@ -229,6 +254,10 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
                     Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 notificar(new EventoManoPoker(EventosManoPoker.GANADOR, jugador + " gana porque nadie mas aposto."));
+            } else if (apuesta.getJugadores().isEmpty() && apuesta.getJugador() == null) {
+                //un jugador aposto, despues salio de la apuesta, y los demas pasaron
+                ganadorYFigura = null;
+                notificar(new EventoManoPoker(EventosManoPoker.GANADOR, "El apostador se retiro y nadie aposto. Se acumula el pozo."));
             } else {
                 ganadorYFigura = obtenerGanador();
                 acreditarPozoGanador(ganadorYFigura.getKey());
@@ -279,7 +308,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
             List<CartaPoker> nuevasCartas = mazo.descartar(cartasDescartadas);
             reasignarCartasAJugador(j, cartasDescartadas, nuevasCartas);
 
-            checkTerminarApuesta();
+            checkTerminarMano();
 
             return nuevasCartas;
         } else {
@@ -336,7 +365,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
 
     boolean jugadorAceptoApuesta(Jugador j) {
         if (apuesta != null) {
-            if (apuesta.getJugadores().contains(j) || apuesta.getJugador().equals(j)) {
+            if (apuesta.getJugadores().contains(j) || (apuesta.getJugador() != null && apuesta.getJugador().equals(j))) {
                 return true;
             }
         }

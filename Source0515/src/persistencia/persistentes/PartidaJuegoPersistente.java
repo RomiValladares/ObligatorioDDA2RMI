@@ -39,7 +39,7 @@ public class PartidaJuegoPersistente implements Persistente {
                 + " VALUES(" + getOid() + "," + u.getNumeroPartida() + ", '"
                 + formato.format(u.getTiempoInicial()) + "', '"
                 + (u.getTiempoFinal() != null ? formato.format(u.getTiempoFinal()) : null) + "', "
-                + u.getDuracion() / 60000 + ", " + u.getTotalApostado() + ", " + getCodigoJuego() + ")");
+                + u.getDuracionCalculada() / 60000 + ", " + u.getTotalApostado() + ", " + getCodigoJuego() + ")");
         //guarda los jugadores solo la primera vez
         if (!u.isFinalizada()) {
             for (Map.Entry<Jugador, Double> entry : u.getJugadores().entrySet()) {
@@ -65,7 +65,7 @@ public class PartidaJuegoPersistente implements Persistente {
     public ArrayList<String> getUpdateSql() {
         ArrayList r = new ArrayList();
         r.add("UPDATE Partidas SET numero=" + u.getNumeroPartida()
-                + ", duracion=" + u.getDuracion() / 60000
+                + ", duracion=" + u.getDuracionCalculada()/ 60000
                 + ", comienzo='" + formato.format(u.getTiempoInicial())
                 + "', final='" + (u.getTiempoFinal() != null ? formato.format(u.getTiempoFinal()) : null)
                 + "', total_apostado=" + u.getTotalApostado() + " WHERE oid=" + getOid());
@@ -118,7 +118,8 @@ public class PartidaJuegoPersistente implements Persistente {
     public void leer(ResultSet rs) throws SQLException {
         u.setOid(rs.getInt("oid"));
         u.setNumero(rs.getInt("numero"));
-        u.setDuracion(rs.getLong("duracion"));
+        System.out.println("v:" + rs.getInt("duracion"));
+        u.setDuracion(rs.getDouble("duracion"));
         u.setTotalApostado(rs.getDouble("total_apostado"));
         try {
             JugadorV1 j = new JugadorV1();

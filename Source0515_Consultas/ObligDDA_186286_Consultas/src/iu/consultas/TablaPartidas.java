@@ -6,7 +6,10 @@
 package iu.consultas;
 
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -265,11 +268,15 @@ public class TablaPartidas extends javax.swing.JPanel {
         Object[][] objs = new Object[partidas.size()][columnasTablaPartidas.length];
         int fila = 0;
         for (DatosPartidaJuegoCasino partidaJuegoCasino : partidas) {
+            boolean partidaFinalizada = partidaJuegoCasino.getTiempoFinal() != null;
+            String totalApostado = partidaFinalizada ? "" + partidaJuegoCasino.getTotalApostado() : "-";
+            String duracion = partidaFinalizada ? "" + partidaJuegoCasino.getDuracion() : "-";
             String[] datos = new String[]{"" + partidaJuegoCasino.getNumeroPartida(),
-                "" + partidaJuegoCasino.getTiempoInicial(),
-                "" + partidaJuegoCasino.getTiempoFinal(),
-                "" + partidaJuegoCasino.getDuracion(),
-                "" + partidaJuegoCasino.getTotalApostado()};
+                "" + formatDate(partidaJuegoCasino.getTiempoInicial()),
+                "" + formatDate(partidaJuegoCasino.getTiempoFinal()),
+                "" + duracion,
+                "" + totalApostado};
+            System.out.println("columnasTablaPartidas.length=" + columnasTablaPartidas.length + " datos.length=" + datos.length);
             objs[fila++] = armarFila(columnasTablaPartidas.length, datos);
 //            objs[fila][col++] = partidaJuegoCasino.getNumeroPartida();
 //            objs[fila][col++] = partidaJuegoCasino.getComienzo();
@@ -277,15 +284,28 @@ public class TablaPartidas extends javax.swing.JPanel {
 //            objs[fila][col++] = partidaJuegoCasino.getDuracion();
 //            objs[fila][col++] = partidaJuegoCasino.getTotalApostado();
         }
-        tablaPartidas.setModel(new DefaultTableModel(objs, columnasTablaPartidas));
+        try {
+            tablaPartidas.setModel(new DefaultTableModel(objs, columnasTablaPartidas));
+        } catch (NoSuchElementException ex) {
+            System.out.println("error tablapartidas");
+            ex.printStackTrace();
+        }
     }
 
     private Object[] armarFila(int cols, String[] datos) {
         Object[] fila = new Object[cols];
-//        for (int i = 0; i < cols; i++) {
-//            fila[i] = datos[i];
-//        }
-        System.arraycopy(datos, 0, fila, 0, cols);
+        System.out.println("armarFila cols=" + cols + " datos.length+" + datos.length);
+        for (int i = 0; i < cols; i++) {
+            fila[i] = datos[i];
+        }
+
         return fila;
+    }
+
+    private String formatDate(Date d) {
+        if (d != null) {
+            return new SimpleDateFormat("HH:mm:ss dd/MM/yy").format(d);
+        }
+        return "-";
     }
 }

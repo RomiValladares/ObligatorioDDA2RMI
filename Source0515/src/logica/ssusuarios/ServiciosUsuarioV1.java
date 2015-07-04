@@ -78,11 +78,18 @@ public class ServiciosUsuarioV1 {
         return usuariosRegistrados;
     }
 
-    void guardar(JugadorV1 u) {
+    void guardar(Jugador u) {
         JugadorPersistente p = new JugadorPersistente(u);
 
         manejador.conectar(stringConexion);
         manejador.agregar(p);
+    }
+
+    void modificar(Jugador u) {
+        JugadorPersistente p = new JugadorPersistente(u);
+
+        manejador.conectar(stringConexion);
+        manejador.modificar(p);
     }
 
 }

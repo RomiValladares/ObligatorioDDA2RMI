@@ -108,8 +108,7 @@ public class SsJuegos extends Observable implements Observer {
         servicios.modificar(p);
     }
 
-    public void guardar(JugadorV1 j) {
-//TODO        
-//SsUsuarios.getInstancia().guardar(j);
+    void modificar(Jugador j) {
+        SsUsuarios.getInstancia().modificar(j);
     }
 }

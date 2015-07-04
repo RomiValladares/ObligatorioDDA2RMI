@@ -8,10 +8,8 @@ package persistencia.persistentes;
 import Persistencia.Persistente;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import persistencia.Parametro;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -35,7 +33,7 @@ public class ParametrosPersistente implements Persistencia.Persistente {
 
     @Override
     public void setOid(int oid) {
-        throw new NotImplementedException();
+        //TODO
     }
 
     @Override

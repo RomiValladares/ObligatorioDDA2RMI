@@ -24,4 +24,6 @@ public interface Jugador extends Usuario {
 
     public String getEtiqueta() throws RemoteException;
 
+    public void setSaldo(double aDouble) throws RemoteException;
+
 }

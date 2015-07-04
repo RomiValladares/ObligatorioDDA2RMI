@@ -18,7 +18,7 @@ import logica.ssusuarios.Jugador;
  */
 public class Apuesta implements Serializable {
 
-    private final Jugador apostador;
+    private Jugador apostador;
     private final double monto;
     private ArrayList<Jugador> jugadores;
 
@@ -81,6 +81,14 @@ public class Apuesta implements Serializable {
 
     public double getMontoApostado() {
         return monto;
+    }
+
+    void quitar(Jugador jugador) {
+        if (apostador != null && apostador.equals(jugador)) {
+            apostador = null;
+        } else {
+            jugadores.remove(jugador);
+        }
     }
 
 }

@@ -118,12 +118,16 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
         return -1;
     }
 
-    void salir() {
+    void desregistrarDePartida() {
         try {
             partida.quitar(this);
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    void salir() {
+        desregistrarDePartida();
 
         FrameJuegos frame = new FrameJuegos(getJugador());
         frame.setVisible(true);
@@ -365,7 +369,8 @@ public class ControladorFramePoker extends ControladorObservador implements Cont
 
     int partidaCronometrada() {
         try {
-            return partida.getTimer() / 1000;
+            int timer = partida.getTimer();
+            return timer > -1 ? timer / 1000 : -1;
         } catch (RemoteException ex) {
             Logger.getLogger(ControladorFramePoker.class.getName()).log(Level.SEVERE, null, ex);
             return -1;

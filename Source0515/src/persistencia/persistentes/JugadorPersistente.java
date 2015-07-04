@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logica.ssusuarios.DatosUsuario;
+import logica.ssusuarios.Jugador;
 import logica.ssusuarios.JugadorV1;
 
 /**
@@ -20,33 +22,53 @@ import logica.ssusuarios.JugadorV1;
  */
 public class JugadorPersistente implements Persistente {
 
-    private JugadorV1 u;
+    private Jugador u;
 
-    public JugadorPersistente(JugadorV1 u) {
+    public JugadorPersistente(Jugador u) {
         this.u = u;
     }
 
     @Override
     public ArrayList<String> getInsertSql() {
         ArrayList r = new ArrayList();
-        r.add("INSERT INTO Jugadores(oid,nombre,pass,saldo)"
-                + "VALUES(" + getOid() + ",'" + u.getNombre() + "','"
-                + u.getContrasena() + "', " + u.getSaldo() + ")");
+        try {
+            DatosUsuario datos = u.getDatos();
+            r.add("INSERT INTO Jugadores(oid,nombre,pass,saldo)"
+                    + "VALUES(" + getOid() + ",'" + u.getNombre() + "','"
+                    + (datos != null ? datos.getContrasena() : "") + "', " + u.getSaldo() + ")"
+            );
+        } catch (RemoteException ex) {
+            Logger.getLogger(JugadorPersistente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return r;
     }
 
     @Override
     public void setOid(int oid) {
-        u.setOid(oid);
+        DatosUsuario datos;
+        try {
+            datos = u.getDatos();
+            if (datos != null) {
+                datos.setOid(oid);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(JugadorPersistente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public ArrayList<String> getUpdateSql() {
         ArrayList r = new ArrayList();
-        r.add("UPDATE Jugadores SET nombre='" + u.getNombre()
-                + "', pass='" + u.getContrasena()
-                + "', saldo=" + u.getSaldo() + " WHERE oid=" + getOid());
+        try {
+            DatosUsuario datos = u.getDatos();
 
+            r.add("UPDATE Jugadores SET nombre='" + u.getNombre()
+                    + "', pass='" + (datos != null ? datos.getContrasena() : "")
+                    + "', saldo=" + u.getSaldo() + " WHERE oid=" + getOid());
+
+        } catch (RemoteException ex) {
+            Logger.getLogger(JugadorPersistente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return r;
     }
 
@@ -66,19 +88,32 @@ public class JugadorPersistente implements Persistente {
 
     @Override
     public int getOid() {
-        if (u == null) {
-            return 0;
-        } else {
-            return u.getOid();
+
+        try {
+            if (u != null && u.getDatos() != null) {
+                return u.getDatos().getOid();
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(JugadorPersistente.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return 0;
     }
 
     @Override
     public void leer(ResultSet rs) throws SQLException {
+        DatosUsuario datos;
+        try {
+            u.setSaldo(rs.getDouble("saldo"));
+            datos = u.getDatos();
+            if (datos != null) {
+                datos.setNombre(rs.getString("nombre"));
+                datos.setContrasena(rs.getString("pass"));
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(JugadorPersistente.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        u.setNombre(rs.getString("nombre"));
-        u.setContrasena(rs.getString("pass"));
-        u.setSaldo(rs.getDouble("saldo"));
     }
 
     @Override

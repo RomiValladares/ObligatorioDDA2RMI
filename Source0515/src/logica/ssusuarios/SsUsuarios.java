@@ -45,7 +45,11 @@ public class SsUsuarios {
         usuariosRegistrados = servicios.getUsuarios();
     }
 
-    public void guardar(JugadorV1 j) {
+    public void guardar(Jugador j) {
         servicios.guardar(j);
+    }
+
+    public void modificar(Jugador j) {
+        servicios.modificar(j);
     }
 }

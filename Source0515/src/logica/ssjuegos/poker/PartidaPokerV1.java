@@ -91,8 +91,11 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         //TODO verificar que comentar esto no cree bugs
         //if (o.getClass().equals(ManoPoker.class)) {
         if (arg instanceof EventoManoPoker && ((EventoManoPoker) arg).getEvento() != null) {
-            if (((EventoManoPoker) arg).getEvento().equals(EventoManoPoker.EventosManoPoker.COMENZO_MANO) && primeraMano) {
+            EventoManoPoker ev = (EventoManoPoker) arg;
+            if (ev.getEvento().equals(EventoManoPoker.EventosManoPoker.COMENZO_MANO) && primeraMano) {
                 notificar(EventosPartidaPoker.COMENZO_PARTIDA);
+            } else if (ev.getEvento().equals(EventoManoPoker.EventosManoPoker.DESCARTAR_CARTAS)) {
+                empezarTimer();
             }
         }
 
@@ -187,11 +190,16 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             primeraMano = true;
         }
 
-        if (manoActual != null && manoActual.getApuesta() == null) {
-            nuevaMano(manoActual.getPozo());
-        } else {
-            nuevaMano(0);
+        double pozoAcumulado = 0;
+
+        if (manoActual != null) {
+            //se acumula el pozo cuando no hubo apuesta o ganador
+            if (manoActual.getApuesta() == null || (manoActual.getApuesta() != null && manoActual.getGanadorYFigura() == null)) {
+                nuevaMano(manoActual.getPozo());
+            }
         }
+        
+        nuevaMano(pozoAcumulado);
 
         //si no ya avisa la nueva mano
     }
@@ -289,22 +297,28 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     @Override
     public void apostar(Jugador jugador, double montoApostado) throws Exception {
-        setJugadorActivo(jugador);
         manoActual.apostar(jugador, montoApostado);
 
+        setJugadorActivo(jugador);
+        //lama al modificar de la BD, el restar saldo lo hace la mano
+        modificar(jugador);
         empezarTimer();
     }
 
     @Override
     public void aceptarApuesta(Jugador jugador) throws Exception {
-        setJugadorActivo(jugador);
         manoActual.aceptarApuesta(jugador);
+
+        setJugadorActivo(jugador);
+        //lama al modificar de la BD, el restar saldo lo hace la mano
+        modificar(jugador);
     }
 
     @Override
     public List<CartaPoker> descartarse(Jugador j, List<CartaPoker> cartasDescartadas) throws Exception {
+        List<CartaPoker> descartarse = manoActual.descartarse(j, cartasDescartadas);
         setJugadorActivo(j);
-        return manoActual.descartarse(j, cartasDescartadas);
+        return descartarse;
     }
 
     @Override
@@ -314,8 +328,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     @Override
     public void pasarApuesta(Jugador jugador) throws RemoteException {
-        setJugadorActivo(jugador);
         manoActual.pasarApuesta(jugador);
+        setJugadorActivo(jugador);
     }
 
     // </editor-fold> 

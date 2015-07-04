@@ -5,9 +5,14 @@
  */
 package iu.consultas;
 
+import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 /**
@@ -26,6 +31,11 @@ public class FrameConsultas extends javax.swing.JFrame implements Observer {
         initComponents();
         setTitle(TITLE);
 
+        try {
+            setIconImage(ImageIO.read(new File("src/imgs/frame_icon_c.png")));
+        } catch (IOException ex) {
+            Logger.getLogger(FrameConsultas.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             controlador = new ControladorFrameConsultas();
             controlador.addObserver(this);
@@ -46,7 +56,7 @@ public class FrameConsultas extends javax.swing.JFrame implements Observer {
         try {
             lblGananciasCasino.setText("" + controlador.getGanancias());
             panelTablas.actualizarJuegos(controlador.getJuegos());
-            panelTablas.actualizarPartidas(controlador.getDatosPartidas( panelTablas.getJuegoSeleccionado()));
+            panelTablas.actualizarPartidas(controlador.getDatosPartidas(panelTablas.getJuegoSeleccionado()));
         } catch (RemoteException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
