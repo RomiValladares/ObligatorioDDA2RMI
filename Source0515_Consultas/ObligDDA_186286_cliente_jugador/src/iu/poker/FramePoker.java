@@ -310,11 +310,13 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         debug(" update EventoPartidaPoker " + evento);
         if (evento.getEvento().equals(EventosPartidaPoker.TIMEOUT_JUGADOR)) {
             if (evento.getJugador().equals(getJugador())) {
-                panelAccionesJugador.mostrarPanelDialogTimeout();
+                timerDeshabilitado = true;
                 controlador.desregistrarDePartida();
+                panelAccionesJugador.mostrarPanelDialogTimeout();
             }
         } else if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {
+                deshabilitarTimer();
                 mostrarDialogoFinPartida(evento);
             } else if (evento.getEvento().equals(EventosPartidaPoker.SALIDA_JUGADOR)) {
                 if (evento.getJugador().equals(getJugador())) {
@@ -512,6 +514,14 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     private void debug(String string) {
         System.out.println("DEBUG FRAME POKER " + string);
+    }
+
+    /**
+     * se llama desde PanelAccionesJuGador
+     */
+    void deshabilitarTimer() {
+        timerDeshabilitado = true;
+        panelAccionesJugador.deshabilitarTimer();
     }
 
 }

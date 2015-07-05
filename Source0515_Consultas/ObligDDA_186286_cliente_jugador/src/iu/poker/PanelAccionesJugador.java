@@ -30,7 +30,7 @@ import logica.ssusuarios.Jugador;
  *
  * @author Romi
  */
-public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTimer.TareaTimer {
+public class PanelAccionesJugador extends javax.swing.JPanel {
 
     private int segundosHasta = 10;
     private FramePoker framePoker;
@@ -107,7 +107,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
         txtDialog = new javax.swing.JLabel();
         btnOKDialog = new javax.swing.JButton();
         btnNoDialog = new javax.swing.JButton();
-        panelTimer = new iu.poker.PanelTimer(this, segundosHasta);
+        panelTimer = new iu.poker.PanelTimer();
 
         setMaximumSize(new java.awt.Dimension(540, 175));
         setMinimumSize(new java.awt.Dimension(540, 175));
@@ -317,7 +317,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
                 .addComponent(panelEsperando, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelDialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -518,7 +518,7 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
 
     protected void mostrarPanelDialog(EventosPartidaPoker evento) {
         if (evento.equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
-
+            framePoker.deshabilitarTimer();
             mostrarPanelDialog();
 
             panelEsperando.setVisible(false);
@@ -636,15 +636,6 @@ public class PanelAccionesJugador extends javax.swing.JPanel implements PanelTim
     void deshabilitarTimer() {
         System.out.println("deshabilitar panel acciones jugador ");
         panelTimer.deshabilitarTimer();
-    }
-
-    @Override
-    public void finalizoTimer() {
-        if (showTimer) {
-            //TODO
-//mostrarPanelEsperando("TIMEOUT, queda fuera de la partida");
-        }
-        //framePoker.continuarEnJuego(false);
     }
 
     void setModoDescartarse(boolean b) {

@@ -9,14 +9,12 @@ import java.awt.Color;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Romi
  */
-public class PanelTimer extends javax.swing.JPanel implements Runnable {
+public class PanelTimer extends javax.swing.JPanel {
 
     private int hasta;
     private volatile int segundoActual;
@@ -34,11 +32,6 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
         this();
         this.hasta = segundosHasta;
         this.segundoActual = segundosHasta;
-    }
-
-    public PanelTimer(TareaTimer t, int segundosHasta) {
-        this(segundosHasta);
-        //this.tareaTimer = t;
     }
 
     public void cancelar() {
@@ -65,10 +58,10 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
                     tareaTimer.cancel();
                 }
             }
-        }, 0, 1000);
+        }, 1000, 1000);
     }
 
-    @Override
+    /*@Override
     public void run() {
         on = true;
         while (on && segundoActual > 0) {
@@ -85,7 +78,7 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
         if (segundoActual == 0) {
             finalizoTimer();
         }
-    }
+    }*/
 
     private void setFont() {
         if (segundoActual == 0) {
@@ -176,10 +169,5 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
 
     private void debug(String msj) {
         System.out.println("DEBUG PANEL TIMER date=" + new Date() + " segundo=" + segundoActual + " " + msj);
-    }
-
-    public interface TareaTimer {
-
-        public void finalizoTimer();
     }
 }

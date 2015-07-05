@@ -346,9 +346,6 @@
       </SubComponents>
     </Container>
     <Component class="iu.poker.PanelTimer" name="panelTimer">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new iu.poker.PanelTimer(this, segundosHasta)"/>
-      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

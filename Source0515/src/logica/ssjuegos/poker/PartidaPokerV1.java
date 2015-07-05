@@ -282,6 +282,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         if (!seguir) {
             retirarse(jugador);
         } else {
+            setJugadorActivo(jugador);
             Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.INFO, null, "continuarEnJuego " + jugador);
             jugadoresQueSiguen++;
             Logger.getLogger("jugadoresQueSiguen " + jugadoresQueSiguen + " jugadores.size()=" + getJugadores().size());
@@ -322,9 +323,10 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     @Override
     public void aceptarApuesta(Jugador jugador) throws Exception {
-        manoActual.aceptarApuesta(jugador);
         debug(jugador.getEtiqueta() + " acepta apuesta");
         setJugadorActivo(jugador);
+        manoActual.aceptarApuesta(jugador);
+
         //lama al modificar de la BD, el restar saldo lo hace la mano
         modificar(jugador);
     }
@@ -359,8 +361,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
                 if (this.getJugadores().containsKey(j)) {
                     try {
                         debug(j.getEtiqueta() + " queda fuera por timeout.");
-                        notificar(new EventoPartidaPoker(EventosPartidaPoker.TIMEOUT_JUGADOR, j.getEtiqueta() + " queda fuera por timeout.", j));
                         quitarJugador(j);
+                        notificar(new EventoPartidaPoker(EventosPartidaPoker.TIMEOUT_JUGADOR, j.getEtiqueta() + " queda fuera por timeout.", j));
                     } catch (Exception ex) {
                         //no deberia nunca dar una excepcion
                         Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.SEVERE, null, ex);
