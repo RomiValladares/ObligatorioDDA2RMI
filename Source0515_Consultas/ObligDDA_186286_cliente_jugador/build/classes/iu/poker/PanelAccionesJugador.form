@@ -30,11 +30,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="panelDialog" pref="499" max="32767" attributes="0"/>
-                  <Component id="panelEsperando" alignment="0" pref="499" max="32767" attributes="0"/>
-                  <Component id="panelApuesta" alignment="0" pref="499" max="32767" attributes="0"/>
-                  <Component id="panelAceptarApuesta" min="-2" pref="499" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="panelTimer" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="panelDialog" pref="499" max="32767" attributes="0"/>
+                      <Component id="panelEsperando" alignment="0" pref="499" max="32767" attributes="0"/>
+                      <Component id="panelApuesta" alignment="0" pref="499" max="32767" attributes="0"/>
+                      <Component id="panelAceptarApuesta" min="-2" pref="499" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace pref="31" max="32767" attributes="0"/>
           </Group>
@@ -42,7 +45,9 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelTimer" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelApuesta" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -340,5 +345,10 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="iu.poker.PanelTimer" name="panelTimer">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new iu.poker.PanelTimer(this, segundosHasta)"/>
+      </AuxValues>
+    </Component>
   </SubComponents>
 </Form>

@@ -1,6 +1,7 @@
 package logica;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 public class Timer implements Runnable {
@@ -48,6 +49,7 @@ public class Timer implements Runnable {
             while (on && totalTranscurrido < hasta) {
                 Thread.sleep(intervalo);
                 totalTranscurrido += intervalo;
+                debug();
                 intervaloTranscurrido();
             }
             if (on) {
@@ -83,5 +85,9 @@ public class Timer implements Runnable {
 
     public void cancelar() {
         on = false;
+    }
+
+    private void debug() {
+        //System.out.println("DEBUG TIMER date=" + new Date() + " totalTranscurrido=" + totalTranscurrido);
     }
 }

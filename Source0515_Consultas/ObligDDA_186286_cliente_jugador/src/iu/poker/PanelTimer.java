@@ -6,6 +6,7 @@
 package iu.poker;
 
 import java.awt.Color;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,13 +57,13 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
     @Override
     public void run() {
         while (on && segundoActual > 0) {
-            setSegundoActual(--segundoActual);
-
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(PanelTimer.class.getName()).log(Level.SEVERE, null, ex);
             }
+            setSegundoActual(--segundoActual);
+            debug();
         }
         if (segundoActual == 0) {
             finalizoTimer();
@@ -149,11 +150,15 @@ public class PanelTimer extends javax.swing.JPanel implements Runnable {
 
     void deshabilitarTimer() {
         cancelar();
-        lblSegundos.setText("-");
+//        lblSegundos.setText("-");
     }
 
     void setTimeout(int timeout) {
         this.hasta = timeout;
+    }
+
+    private void debug() {
+        System.out.println("DEBUG PANEL TIMER date=" + new Date() + " segundo=" + segundoActual);
     }
 
     public interface TareaTimer {

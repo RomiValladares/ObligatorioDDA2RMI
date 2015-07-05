@@ -73,7 +73,6 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                     panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaximaManoActual());
 
                     if (!ingresoAPartida) {
-                        System.out.println("FramePoker.ActualizarUI !ingresoAPartida");
                         panelAccionesJugador.setShowTimer(controlador.partidaCronometrada());
 
                         //actualizarCartas();
@@ -221,7 +220,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         if (set) {
             panelJuegoPoker1.setModoDescartarse(this);
             panelAccionesJugador.setModoDescartarse(false);
-            panelAccionesJugador.resetear();
+            //panelAccionesJugador.resetear();
         } else {
             panelJuegoPoker1.setModoDescartarse(set);
         }
@@ -242,7 +241,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("FramePoker.update class=" + (o != null ? o.getClass() : null) + ", arg class=" + (arg != null ? arg.getClass() : null) + ", arg toString=" + (arg != null ? arg.toString() : null));
+        debug("FramePoker.update class=" + (o != null ? o.getClass() : null) + ", arg class=" + (arg != null ? arg.getClass() : null) + ", arg toString=" + (arg != null ? arg.toString() : null));
         //TODO revisar que comentar esto no cree bugs
         //if (o.getClass().equals(PartidaPoker.class)) {
         panelDatosJugador1.actualizar();
@@ -258,7 +257,6 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
             EventosPartidaPoker evento = (EventosPartidaPoker) arg;
             actualizar(evento);
         } else if (arg == null) {
-            Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update " + (arg != null ? arg.getClass() : "") + arg);
             actualizarUI();
         }
         // }
@@ -270,10 +268,10 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                 panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
             }
         } else if (evento.equals(EventosPartidaPoker.COMENZO_TIMER)) {
+            debug("COMENZO_TIMER timerDeshabilitado=" + timerDeshabilitado);
             if (!timerDeshabilitado) {
                 panelAccionesJugador.resetear();
             }
-            timerDeshabilitado = false;
         } else {
             panelDatosPartida1.addEvento(evento);
             actualizarUI();
@@ -284,6 +282,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoManoPoker " + evento);
         if (evento.getEvento() != null && evento.getEvento().equals(EventosManoPoker.DESCARTAR_CARTAS)) {
             if (controlador.jugadorAceptoApuesta()) {
+                timerDeshabilitado = false;
                 setModoDescartarse(true);
             }
         } else {
@@ -310,8 +309,8 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
         Logger.getLogger(FramePoker.class.getName()).log(Level.INFO, "FramePoker update EventoPartidaPoker " + evento);
         if (evento.getEvento().equals(EventosPartidaPoker.TIMEOUT_JUGADOR)) {
             if (evento.getJugador().equals(getJugador())) {
-                controlador.desregistrarDePartida();
                 panelAccionesJugador.mostrarPanelDialogTimeout();
+                controlador.desregistrarDePartida();
             }
         } else if (!evento.getEvento().equals(EventosPartidaPoker.JUGADOR_SALDO_INSUFICIENTE)) {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {
@@ -360,16 +359,13 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                 case NUEVA_APUESTA:
                     if (controlador.jugadorAposto()) {
                         timerDeshabilitado = true;
-                        System.out.println("NUEVA_APUESTA jugadorAposto");
+
                         panelAccionesJugador.mostrarPanelEsperando("Esperando...");
                         panelAccionesJugador.deshabilitarTimer();
                     } else {
                         timerDeshabilitado = false;
                         mostrarPanelApuesta();
                     }
-                    break;
-                case DESCARTAR_CARTAS:
-                    setModoDescartarse(true);
                     break;
             }
         }
@@ -419,7 +415,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     private void mostrarDialogoFinPartida(EventoPartidaPoker evento) {
-        System.out.println("FramePoker mostrarDialogoFinPartida evento=" + evento);
+
         try {
             if (evento.getEvento().equals(EventosPartidaPoker.FINALIZO_PARTIDA)) {
                 panelAccionesJugador.mostrarDialogFinPartida(controlador.getPartida(), controlador.getGanadorPartida(), getJugador());
@@ -460,7 +456,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     void continuarEnJuego(boolean continuar) {
         try {
-            System.out.println("FramePoker continuarEnJuego");
+            debug(" continuarEnJuego");
             controlador.continuarEnJuego(continuar);
             if (!continuar) {
                 //se llama en el update, con SALIDA_JUGAODR
@@ -473,7 +469,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     void cerrar() {
-        System.out.println("FramePoker cerrar");
+        debug(" cerrar");
         controlador.salir();
 
         setVisible(false);
@@ -496,6 +492,10 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
 
     void checkPuedeJugar() {
         controlador.checkPuedeJugar();
+    }
+
+    private void debug(String string) {
+        System.out.println("DEBUG FRAME POKER " + string);
     }
 
 }

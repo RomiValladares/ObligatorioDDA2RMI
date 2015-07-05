@@ -186,6 +186,7 @@ public class PanelDatosPartida extends javax.swing.JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("PanelDatosPartida ActualizarUI");
         actualizarUI();
     }
 

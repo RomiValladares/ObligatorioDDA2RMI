@@ -213,7 +213,7 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
         System.out.println("DEBUG MANO ---checkTerminarMano---:");
         System.out.println("DEBUG MANO checkTerminarMano jugadores.size()=" + jugadores.size());
         if (jugadores.size() == 1 || (apuesta != null && apuesta.todosDescartaron())) {
-            System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + apuesta.todosDescartaron());
+            System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + apuesta != null ? apuesta.todosDescartaron() : "apuesta null");
             System.out.println("DEBUG MANO checkTerminarMano llama a checkTerminarApuesta");
             checkTerminarApuesta();
         } else if (apuesta != null) {

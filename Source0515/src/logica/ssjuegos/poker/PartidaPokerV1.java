@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import logica.ssjuegos.JuegoCasinoV1.EventosJuegoCasino;
 import logica.ssjuegos.PartidaJuegoCasinoV1;
+import logica.ssjuegos.poker.EventoManoPoker.EventosManoPoker;
 import logica.ssjuegos.poker.EventoPartidaPoker.EventosPartidaPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
 import logica.ssusuarios.Jugador;
@@ -24,7 +25,8 @@ import observableremoto.ObservadorRemoto;
 public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, PartidaPoker {
 
     private ManoPokerV1 manoActual;
-    private int cantidadMaxJugadores = 4;
+    //TODO DEVOLVER A =4
+    private int cantidadMaxJugadores = 2;
     private double apuestaBase = 50;
     private boolean primeraMano;
     private int ready = 0;
@@ -87,13 +89,16 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     public void update(Observable o, Object arg) {
         //TODO verificar que comentar esto no cree bugs
         //if (o.getClass().equals(ManoPoker.class)) {
+        //indica si hay que empezar el timer
+        //despues de hacer los chequeos de saldo insuficiente y eso
+        boolean comenzarTimer = false;
         debug("update " + arg);
         if (arg instanceof EventoManoPoker && ((EventoManoPoker) arg).getEvento() != null) {
-            EventoManoPoker ev = (EventoManoPoker) arg;
-            if (ev.getEvento().equals(EventoManoPoker.EventosManoPoker.COMENZO_MANO) && primeraMano) {
+            EventosManoPoker ev = ((EventoManoPoker) arg).getEvento();
+            if (ev.equals(EventosManoPoker.COMENZO_MANO) && primeraMano) {
                 notificar(EventosPartidaPoker.COMENZO_PARTIDA);
-            } else if (ev.getEvento().equals(EventoManoPoker.EventosManoPoker.DESCARTAR_CARTAS)) {
-                empezarTimer();
+            } else if (ev.equals(EventosManoPoker.DESCARTAR_CARTAS) || ev.equals(EventosManoPoker.FINALIZO_MANO)) {
+                comenzarTimer = true;
             }
         }
 
@@ -106,10 +111,15 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             }
             checkJugadoresSaldoInsuficiente();
         }
+
         //si despues de chequear el saldo de los jugadores todavia no termino la partida
         //deja que la mano actual notifique
         if (!isFinalizada()) {
             notificar(arg);
+        }
+
+        if (comenzarTimer) {
+            empezarTimer();
         }
 
         modificar();

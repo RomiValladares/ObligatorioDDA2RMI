@@ -284,7 +284,7 @@ public class TablaPartidas extends javax.swing.JPanel {
 //            objs[fila][col++] = partidaJuegoCasino.getDuracion();
 //            objs[fila][col++] = partidaJuegoCasino.getTotalApostado();
         }
-
+        tablaPartidas.clearSelection();
         tablaPartidas.setModel(new DefaultTableModel(objs, columnasTablaPartidas));
 
     }
