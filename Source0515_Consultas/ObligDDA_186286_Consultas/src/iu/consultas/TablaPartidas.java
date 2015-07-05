@@ -44,7 +44,7 @@ public class TablaPartidas extends javax.swing.JPanel {
                 if (tablaPartidas.getSelectedRow() != -1) {
                     Object partidaSeleccionada = tablaPartidas.getValueAt(tablaPartidas.getSelectedRow(), 0);
                     lblParticipantesPartida.setText("Participantes partida " + partidaSeleccionada);
-
+                    
                     mostrarListaParticipantes(partidas.get(tablaPartidas.getSelectedRow()));
                 } else {
                     panelAbajo.setVisible(false);
@@ -52,7 +52,7 @@ public class TablaPartidas extends javax.swing.JPanel {
             }
         });
     }
-
+    
     private void mostrarListaParticipantes(DatosPartidaJuegoCasino seleccionada) {
         panelAbajo.setVisible(true);
         listaParticipantes.setListData(new ArrayList<>(seleccionada.getJugadores().keySet()).toArray());
@@ -222,7 +222,7 @@ public class TablaPartidas extends javax.swing.JPanel {
     private void comboJuegosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboJuegosActionPerformed
         actualizarLabelPartida();
     }//GEN-LAST:event_comboJuegosActionPerformed
-
+    
     private void actualizarLabelPartida() {
         panelAbajo.setVisible(false);
         try {
@@ -250,21 +250,21 @@ public class TablaPartidas extends javax.swing.JPanel {
     JuegoCasino getJuegoSeleccionado() {
         return juegos.get(comboJuegos.getSelectedIndex());
     }
-
+    
     void actualizarJuegos(ArrayList<JuegoCasino> juegos) {
         this.juegos = juegos;
-
+        
         comboJuegos.setModel(new DefaultComboBoxModel(juegos.toArray()));
         comboJuegos.setRenderer(new RendererCelda());
-
+        
         actualizarLabelPartida();
     }
-
+    
     private final String[] columnasTablaPartidas = {"Numero", "Comienzo", "Final", "Duracion (mins)", "Total Apostado"};
-
+    
     void actualizarPartidas(ArrayList<DatosPartidaJuegoCasino> partidas) {
         this.partidas = partidas;
-
+        
         Object[][] objs = new Object[partidas.size()][columnasTablaPartidas.length];
         int fila = 0;
         for (DatosPartidaJuegoCasino partidaJuegoCasino : partidas) {
@@ -286,19 +286,18 @@ public class TablaPartidas extends javax.swing.JPanel {
         }
         tablaPartidas.clearSelection();
         tablaPartidas.setModel(new DefaultTableModel(objs, columnasTablaPartidas));
-
     }
-
+    
     private Object[] armarFila(int cols, String[] datos) {
         Object[] fila = new Object[cols];
         System.out.println("armarFila cols=" + cols + " datos.length+" + datos.length);
         for (int i = 0; i < cols; i++) {
             fila[i] = datos[i];
         }
-
+        
         return fila;
     }
-
+    
     private String formatDate(Date d) {
         if (d != null) {
             return new SimpleDateFormat("HH:mm:ss dd/MM/yy").format(d);

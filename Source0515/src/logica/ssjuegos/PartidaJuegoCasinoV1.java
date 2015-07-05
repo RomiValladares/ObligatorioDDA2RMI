@@ -41,6 +41,8 @@ public abstract class PartidaJuegoCasinoV1 extends ObservableRemotoV1 implements
         setComenzada(false);
         setFinalizada(true);
 
+        cancelarTimer();
+        
         setTiempoFinal(new Date());
 
         obtenerGanador();

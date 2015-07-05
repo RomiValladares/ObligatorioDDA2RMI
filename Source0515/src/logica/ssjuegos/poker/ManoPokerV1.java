@@ -124,10 +124,8 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
             Logger.getLogger(ManoPokerV1.class.getName()).log(Level.SEVERE, null, ex);
         }
         notificar(new EventoManoPoker(null, j + " pasa."));
-        if (cantJugadoresQuePasaron == jugadores.size()) {
-            //todos pasaron, finaliza la mano
-            finalizar();
-        }
+        checkTodosPasaron();
+
     }
 
     private void finalizar() {
@@ -220,6 +218,8 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
             System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + apuesta.todosDescartaron());
             System.out.println("DEBUG MANO checkTerminarMano llama a checkDescartarCartas");
             checkDescartarCartas();
+        } else {
+            checkTodosPasaron();
         }
     }
 
@@ -371,6 +371,13 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
             }
         }
         return false;
+    }
+
+    private void checkTodosPasaron() {
+        if (cantJugadoresQuePasaron == jugadores.size()) {
+            //todos pasaron, finaliza la mano
+            finalizar();
+        }
     }
 
     //clase wrapper para ordenar el array de jugadores-figuras

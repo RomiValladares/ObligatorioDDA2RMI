@@ -26,7 +26,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     private ManoPokerV1 manoActual;
     //TODO DEVOLVER A =4
-    private int cantidadMaxJugadores = 2;
+    private int cantidadMaxJugadores = 3;
     private double apuestaBase = 50;
     private boolean primeraMano;
     private int ready = 0;

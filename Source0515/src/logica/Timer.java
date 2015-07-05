@@ -88,6 +88,6 @@ public class Timer implements Runnable {
     }
 
     private void debug() {
-        //System.out.println("DEBUG TIMER date=" + new Date() + " totalTranscurrido=" + totalTranscurrido);
+        System.out.println("DEBUG TIMER date=" + new Date() + " totalTranscurrido=" + totalTranscurrido);
     }
 }
