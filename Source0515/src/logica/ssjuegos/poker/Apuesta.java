@@ -58,7 +58,7 @@ public class Apuesta implements Serializable {
 
     public String getEtiqueta() {
         try {
-            return apostador.getNombre() + " aposto $" + monto;
+            return (apostador != null ? apostador.getNombre() : "Jugador que se retiro ") + (" aposto $" + monto);
         } catch (RemoteException ex) {
             Logger.getLogger(Apuesta.class.getName()).log(Level.SEVERE, null, ex);
             return "";
@@ -74,7 +74,7 @@ public class Apuesta implements Serializable {
     }
 
     protected boolean todosDescartaron() {
-        return jugadoresDescartados == jugadores.size() + 1;
+        return jugadoresDescartados == jugadores.size() + (apostador != null ? 1 : 0);
     }
 
     public int getTotalJugadores() {

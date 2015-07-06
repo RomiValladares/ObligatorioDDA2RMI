@@ -150,11 +150,13 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     }
 
     private void restarGanancias(Jugador jugador) {
-        double diezPorcientoGanancias = (10 * getJugadores().get(jugador)) / 100;
-        if (diezPorcientoGanancias > 0) {
-            descontarSaldo(jugador, diezPorcientoGanancias);
-            setGanancias(getGanancias() + diezPorcientoGanancias);
-            notificar(EventosJuegoCasino.NUEVA_GANANCIA);
+        if (getJugadores().get(jugador) != null) {
+            double diezPorcientoGanancias = (10 * getJugadores().get(jugador)) / 100;
+            if (diezPorcientoGanancias > 0) {
+                descontarSaldo(jugador, diezPorcientoGanancias);
+                setGanancias(getGanancias() + diezPorcientoGanancias);
+                notificar(EventosJuegoCasino.NUEVA_GANANCIA);
+            }
         }
     }
 

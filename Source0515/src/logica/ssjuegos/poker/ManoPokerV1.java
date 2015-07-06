@@ -210,8 +210,8 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     private void checkTerminarMano() {
         System.out.println("DEBUG MANO ---checkTerminarMano---:");
         System.out.println("DEBUG MANO checkTerminarMano jugadores.size()=" + jugadores.size());
-        if (jugadores.size() == 1 || (apuesta != null && apuesta.todosDescartaron())) {
-            System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + apuesta != null ? apuesta.todosDescartaron() : "apuesta null");
+        if (apuesta != null && (jugadores.size() == 1 || apuesta.todosDescartaron())) {
+            System.out.println("DEBUG MANO checkTerminarMano apuesta.todosDescartaron()=" + (apuesta != null ? apuesta.todosDescartaron() : "apuesta null"));
             System.out.println("DEBUG MANO checkTerminarMano llama a checkTerminarApuesta");
             checkTerminarApuesta();
         } else if (apuesta != null) {
@@ -239,7 +239,6 @@ public class ManoPokerV1 extends UnicastRemoteObject implements ManoPoker {
     }
 
     private void checkTerminarApuesta() {
-        System.out.println("DEBUG MANO CheckTerminarApuesta. jugadores.size()=" + jugadores.size() + " apuesta.getJugadores.size()=" + apuesta.getJugadores().size());
         //lo agrego porque puede ser que el que aposto se haya retirado
         int jugadorQueAposto = apuesta.getJugador() != null ? 1 : 0;
         if (jugadores.size() == 1 || (apuesta.getJugadores().size() + jugadorQueAposto == jugadores.size() && apuesta.todosDescartaron())) {
