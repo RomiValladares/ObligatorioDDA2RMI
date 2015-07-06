@@ -42,10 +42,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         } else {
             notificar(new EventoPartidaPoker(EventosPartidaPoker.SALIDA_JUGADOR, jugador + " sale del juego.", jugador));
         }
-        if (jugadoresQueSiguen == getJugadores().size() && isComenzada()) {
-            jugadoresQueSiguen = 0;
-            comenzar();
-        }
+        checkContinuarPartida();
     }
 
     protected void quitarJugador(Jugador jugador) throws Exception {
@@ -117,11 +114,9 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
         if (!isFinalizada()) {
             notificar(arg);
         }
-
         if (comenzarTimer) {
             empezarTimer();
         }
-
         modificar();
         //}
     }
@@ -374,6 +369,8 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             //esto es para cuando un jugador elija retirarse sin que haya empezado la partida
             if (isComenzada() && getJugadores().size() <= 1 && !isFinalizada()) {
                 finalizarPartida();
+            } else {
+                checkContinuarPartida();
             }
         }
     }
@@ -393,5 +390,12 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
     //TODO borrar
     private void debug(String msj) {
         System.out.println("DEBUG PARTIDA " + msj);
+    }
+
+    private void checkContinuarPartida() {
+        if (jugadoresQueSiguen == getJugadores().size() && isComenzada()) {
+            jugadoresQueSiguen = 0;
+            comenzar();
+        }
     }
 }

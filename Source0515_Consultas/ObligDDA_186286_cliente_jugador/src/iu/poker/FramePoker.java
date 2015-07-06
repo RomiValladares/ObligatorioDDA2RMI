@@ -268,7 +268,7 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
                 panelAccionesJugador.mostrarPanelApuesta(controlador.getApuestaMaxima());
             }
         } else if (evento.equals(EventosPartidaPoker.COMENZO_TIMER)) {
-            debug("COMENZO_TIMER timerDeshabilitado=" + timerDeshabilitado);
+            debug("271 COMENZO_TIMER timerDeshabilitado=" + timerDeshabilitado);
             if (!timerDeshabilitado) {
                 panelAccionesJugador.resetear();
             }
@@ -448,7 +448,6 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     void aceptarApuesta() {
         try {
 //            partida.getManoActual().aceptarApuesta(getJugador());
-            debug("--> 449 deshabilitar");
             panelAccionesJugador.deshabilitarTimer();
             controlador.aceptarApuesta();
 
@@ -463,7 +462,6 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     void pasarApuesta() {
-        debug("--> 464 deshabilitar");
         panelAccionesJugador.deshabilitarTimer();
         timerDeshabilitado = true;
         controlador.pasarApuesta();
@@ -499,7 +497,6 @@ public class FramePoker extends FrameJuegoCasino implements Observer {
     }
 
     void pasar() {
-        debug("--> 497 deshabilitar");
         panelAccionesJugador.deshabilitarTimer();
         controlador.pasar();
     }
