@@ -1,15 +1,15 @@
 package logica;
 
-import logica.ssjuegos.SsJuegos;
-import logica.ssjuegos.JuegoCasino;
-import logica.ssjuegos.DatosPartidaJuegoCasino;
-import logica.ssusuarios.SsUsuarios;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logica.ssjuegos.DatosPartidaJuegoCasino;
+import logica.ssjuegos.JuegoCasino;
+import logica.ssjuegos.SsJuegos;
+import logica.ssusuarios.SsUsuarios;
 import logica.ssusuarios.Usuario;
 import observableremoto.ObservableRemotoV1;
 
@@ -77,6 +77,7 @@ public class FachadaV1 extends ObservableRemotoV1 implements Fachada, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("Fachada update " + arg);
         notificar(arg);
     }
 

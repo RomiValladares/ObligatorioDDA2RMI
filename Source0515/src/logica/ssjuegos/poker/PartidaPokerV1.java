@@ -2,7 +2,6 @@ package logica.ssjuegos.poker;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
 
     private ManoPokerV1 manoActual;
     //TODO DEVOLVER A =4
-    private int cantidadMaxJugadores = 3;
+    private int cantidadMaxJugadores = 4;
     private double apuestaBase = 50;
     private boolean primeraMano;
     private int ready = 0;
@@ -280,9 +279,9 @@ public class PartidaPokerV1 extends PartidaJuegoCasinoV1 implements Observer, Pa
             retirarse(jugador);
         } else {
             setJugadorActivo(jugador);
-            Logger.getLogger(PartidaPokerV1.class.getName()).log(Level.INFO, null, "continuarEnJuego " + jugador);
+            debug("continuarEnJuego " + jugador);
             jugadoresQueSiguen++;
-            Logger.getLogger("jugadoresQueSiguen " + jugadoresQueSiguen + " jugadores.size()=" + getJugadores().size());
+            debug("jugadoresQueSiguen " + jugadoresQueSiguen + " jugadores.size()=" + getJugadores().size());
             if (jugadoresQueSiguen == getJugadores().size()) {
                 jugadoresQueSiguen = 0;
                 comenzar();

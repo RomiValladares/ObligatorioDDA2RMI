@@ -48,7 +48,7 @@ public class FrameConsultas extends javax.swing.JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("FrameConsultas.update");
+        System.out.println("FrameConsultas.update " + arg);
         mostrar();
     }
 

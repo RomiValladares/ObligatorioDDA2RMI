@@ -5,12 +5,11 @@
  */
 package logica.ssjuegos;
 
-import logica.ssusuarios.Jugador;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import logica.ssjuegos.FabricadorJuegosCasino.CodigosJuego;
+import logica.ssusuarios.Jugador;
 
 /**
  *

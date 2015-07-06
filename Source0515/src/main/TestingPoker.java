@@ -4,21 +4,13 @@
 package main;
 
 import java.rmi.RemoteException;
-import static org.junit.Assert.*;
-
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import junit.framework.TestCase;
 import logica.ssjuegos.poker.CartaPoker;
-import logica.FachadaV1;
-import logica.ssjuegos.JuegoCasinoV1;
-import logica.ssusuarios.JugadorV1;
 import logica.ssjuegos.poker.CartaPoker.ComparadorPorNumeroCartaDesc;
 import logica.ssjuegos.poker.MazoPoker;
 import logica.ssjuegos.poker.figuras.Escalera;
@@ -26,11 +18,11 @@ import logica.ssjuegos.poker.figuras.FiguraPoker;
 import logica.ssjuegos.poker.figuras.Par;
 import logica.ssjuegos.poker.figuras.Pierna;
 import logica.ssjuegos.poker.figuras.Poker;
+import logica.ssusuarios.JugadorV1;
 import main.TestManoPoker.JugadorYFigura;
-
-import org.junit.Rule;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * @author Romi

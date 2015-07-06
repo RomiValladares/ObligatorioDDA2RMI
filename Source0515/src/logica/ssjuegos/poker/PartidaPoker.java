@@ -11,7 +11,6 @@ import java.util.Map;
 import logica.ssjuegos.PartidaJuegoCasino;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
 import logica.ssusuarios.Jugador;
-import observableremoto.ObservadorRemoto;
 
 /**
  *

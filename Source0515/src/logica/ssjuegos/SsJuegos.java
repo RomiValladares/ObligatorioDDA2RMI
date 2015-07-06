@@ -6,7 +6,6 @@ import java.util.Observable;
 import java.util.Observer;
 import logica.ssjuegos.JuegoCasinoV1.EventosJuegoCasino;
 import logica.ssusuarios.Jugador;
-import logica.ssusuarios.JugadorV1;
 import logica.ssusuarios.SsUsuarios;
 
 //Observer porque observa los juegos para saber cuando se produce una nueva ganancia

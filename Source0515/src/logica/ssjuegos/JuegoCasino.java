@@ -5,10 +5,8 @@
  */
 package logica.ssjuegos;
 
-import logica.ssusuarios.Jugador;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Observable;
 import logica.ssusuarios.Jugador;
 import observableremoto.ObservadorRemoto;
 

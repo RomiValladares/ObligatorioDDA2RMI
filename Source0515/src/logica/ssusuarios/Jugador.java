@@ -5,7 +5,6 @@
  */
 package logica.ssusuarios;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**

@@ -4,9 +4,6 @@ package logica.ssjuegos.poker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import logica.ssjuegos.poker.CartaPoker.PaloCarta;
 import logica.ssjuegos.poker.figuras.FabricaFigurasPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;

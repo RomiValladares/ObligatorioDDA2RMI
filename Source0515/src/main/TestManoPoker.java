@@ -1,18 +1,17 @@
 package main;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import logica.ssusuarios.JugadorV1;
 import logica.ssjuegos.poker.CartaPoker;
 import logica.ssjuegos.poker.MazoPoker;
 import logica.ssjuegos.poker.figuras.FiguraPoker;
+import logica.ssusuarios.JugadorV1;
 
 //copia de ManoPoker para poder usar los metodos en TestingPoker
 public class TestManoPoker {
